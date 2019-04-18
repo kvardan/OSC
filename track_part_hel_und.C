@@ -1,4 +1,4 @@
-// track a particle
+// track a particle through the undulator field
 
 #include "track_part_hel_und.h"
 
