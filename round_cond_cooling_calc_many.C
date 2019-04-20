@@ -1,39 +1,14 @@
 void cooling_calc(double , double, double );
+void plot_all();
 double cool_pres, tot_power, cden_final, cur_single,lcond_total, steel_mass, voltage_drop, tot_resist;
+double nx[20], field[20], ny[12];
+double inch = 2.54;
+double dcond = 0.25*inch;                           //conductor diameter
+double dhole = 0.12*inch;                           //conductor hole diameter
+
 
 void round_cond_cooling_calc_many()
 {
-  TH2D * hh_pres = new TH2D ("Water pressure vs conductor geometry", "Water pressure vs conductor geometry", 11, 4.5, 15.5, 8, 6.5, 14.5);
-  TH2D * hh_pow  = new TH2D ("Total power vs conductor geometry",   "Total power vs conductor geometry", 11, 4.5, 15.5, 8, 6.5, 14.5);
-  TH2D * hh_cden = new TH2D ("Current density vs conductor geometry", "Current density vs conductor geometry", 11, 4.5, 15.5, 8, 6.5, 14.5);
-  TH2D * hh_cur  = new TH2D ("Current for single wire", "Current for single wire", 11, 4.5, 15.5, 8, 6.5, 14.5);
-  TH2D * hh_lcond  = new TH2D ("lcond", "lcond", 11, 4.5, 15.5, 8, 6.5, 14.5);
-  TH2D * hh_steel  = new TH2D ("steel", "steel", 11, 4.5, 15.5, 8, 6.5, 14.5);
-  TH2D * hh_voltage= new TH2D ("volts", "volts", 11, 4.5, 15.5, 8, 6.5, 14.5);
-  TH2D * hh_resist = new TH2D ("resist", "resist", 11, 4.5, 15.5, 8, 6.5, 14.5);
-
-  hh_pres->GetXaxis()->SetTitle("Nr of conductors per width");
-  hh_pres->GetYaxis()->SetTitle("Nr of conductors per height (radial)");
-
-  hh_pow->GetXaxis()->SetTitle("Nr of conductors per width");
-  hh_pow->GetYaxis()->SetTitle("Nr of conductors per height (radial)");
-
-  hh_cden->GetXaxis()->SetTitle("Nr of conductors per width");
-  hh_cden->GetYaxis()->SetTitle("Nr of conductors per height (radial)");
-
-  hh_cur->GetXaxis()->SetTitle("Nr of conductors per width");
-  hh_cur->GetYaxis()->SetTitle("Nr of conductors per height (radial)");
-
-  hh_lcond->GetXaxis()->SetTitle("Nr of conductors per width");
-  hh_lcond->GetYaxis()->SetTitle("Nr of conductors per height (radial)");
-
-  hh_steel->GetXaxis()->SetTitle("Nr of conductors per width");
-  hh_steel->GetYaxis()->SetTitle("Nr of conductors per height (radial)");
-
-  hh_voltage->GetXaxis()->SetTitle("Nr of conductors per width");
-  hh_voltage->GetYaxis()->SetTitle("Nr of conductors per height (radial)");
-
-  double nx[20], field[20], ny[12];
   ny[0]=7;
   ny[1]=8;
   ny[2]=9;
@@ -68,6 +43,84 @@ void round_cond_cooling_calc_many()
   field[9]=2.107;
   field[10]=2.073;
 
+  TCanvas *c_fld_cur = new TCanvas("c_fld_cur", "c_fld_cur");
+  c_fld_cur->cd();
+  TGraph * gr_wid_field = new TGraph(11, nx, field);
+  gr_wid_field->SetTitle("Field vs current");
+  gr_wid_field->SetMarkerStyle(20);
+  gr_wid_field->Draw("AP");
+  c_fld_cur->Update();
+  TF1 *pol_fit = new TF1("pol_fit", "pol6");
+  gr_wid_field->Fit("pol_fit");
+  double par_0 = pol_fit->GetParameter(0);
+  double par_1 = pol_fit->GetParameter(1);
+  double par_2 = pol_fit->GetParameter(2);
+  double par_3 = pol_fit->GetParameter(3);
+  double par_4 = pol_fit->GetParameter(4);
+  double par_5 = pol_fit->GetParameter(5);
+  double par_6 = pol_fit->GetParameter(6);
+  cout<<"par0="<<par_0<<endl;
+  cout<<"par1="<<par_1<<endl;
+  cout<<"par2="<<par_2<<endl;
+  cout<<"par3="<<par_3<<endl;
+  cout<<"par4="<<par_4<<endl;
+  cout<<"par5="<<par_5<<endl;
+  cout<<"par6="<<par_6<<endl;
+
+
+
+
+  double width_new=0.25*inch;
+/*
+  double x=7;
+  cout<<"fn="<<par_0+par_1*x+par_2*x*x+par_3*x*x*x+par_4*x*x*x*x+par_5*x*x*x*x*x+par_6*x*x*x*x*x*x<<endl;
+  x=8;
+  cout<<"fn="<<par_0+par_1*x+par_2*x*x+par_3*x*x*x+par_4*x*x*x*x+par_5*x*x*x*x*x+par_6*x*x*x*x*x*x<<endl;
+  x=9;
+  cout<<"fn="<<par_0+par_1*x+par_2*x*x+par_3*x*x*x+par_4*x*x*x*x+par_5*x*x*x*x*x+par_6*x*x*x*x*x*x<<endl;
+  x=10;
+  cout<<"fn="<<par_0+par_1*x+par_2*x*x+par_3*x*x*x+par_4*x*x*x*x+par_5*x*x*x*x*x+par_6*x*x*x*x*x*x<<endl;
+  x=11;
+  cout<<"fn="<<par_0+par_1*x+par_2*x*x+par_3*x*x*x+par_4*x*x*x*x+par_5*x*x*x*x*x+par_6*x*x*x*x*x*x<<endl;
+  x=12;
+  cout<<"fn="<<par_0+par_1*x+par_2*x*x+par_3*x*x*x+par_4*x*x*x*x+par_5*x*x*x*x*x+par_6*x*x*x*x*x*x<<endl;
+*/
+  plot_all();
+}
+
+void plot_all()
+{
+  TH2D * hh_pres = new TH2D ("Water pressure vs conductor geometry", "Water pressure vs conductor geometry", 11, 4.5, 15.5, 8, 6.5, 14.5);
+  TH2D * hh_pow  = new TH2D ("Total power vs conductor geometry",   "Total power vs conductor geometry", 11, 4.5, 15.5, 8, 6.5, 14.5);
+  TH2D * hh_cden = new TH2D ("Current density vs conductor geometry", "Current density vs conductor geometry", 11, 4.5, 15.5, 8, 6.5, 14.5);
+  TH2D * hh_cur  = new TH2D ("Current for single wire", "Current for single wire", 11, 4.5, 15.5, 8, 6.5, 14.5);
+  TH2D * hh_lcond  = new TH2D ("lcond", "lcond", 11, 4.5, 15.5, 8, 6.5, 14.5);
+  TH2D * hh_steel  = new TH2D ("steel", "steel", 11, 4.5, 15.5, 8, 6.5, 14.5);
+  TH2D * hh_voltage= new TH2D ("volts", "volts", 11, 4.5, 15.5, 8, 6.5, 14.5);
+  TH2D * hh_resist = new TH2D ("resist", "resist", 11, 4.5, 15.5, 8, 6.5, 14.5);
+
+  hh_pres->GetXaxis()->SetTitle("Nr of conductors per width");
+  hh_pres->GetYaxis()->SetTitle("Nr of conductors per height (radial)");
+
+  hh_pow->GetXaxis()->SetTitle("Nr of conductors per width");
+  hh_pow->GetYaxis()->SetTitle("Nr of conductors per height (radial)");
+
+  hh_cden->GetXaxis()->SetTitle("Nr of conductors per width");
+  hh_cden->GetYaxis()->SetTitle("Nr of conductors per height (radial)");
+
+  hh_cur->GetXaxis()->SetTitle("Nr of conductors per width");
+  hh_cur->GetYaxis()->SetTitle("Nr of conductors per height (radial)");
+
+  hh_lcond->GetXaxis()->SetTitle("Nr of conductors per width");
+  hh_lcond->GetYaxis()->SetTitle("Nr of conductors per height (radial)");
+
+  hh_steel->GetXaxis()->SetTitle("Nr of conductors per width");
+  hh_steel->GetYaxis()->SetTitle("Nr of conductors per height (radial)");
+
+  hh_voltage->GetXaxis()->SetTitle("Nr of conductors per width");
+  hh_voltage->GetYaxis()->SetTitle("Nr of conductors per height (radial)");
+
+
   double pow_gr[20];
   double pres_gr[20];
   int i=0;
@@ -85,14 +138,14 @@ void round_cond_cooling_calc_many()
     cooling_calc(nx[i], ny[j], field[i]*ny[j]/10.);
     pow_gr[i]=tot_power/1000.;
     pres_gr[i]=cool_pres;
-    hh_pow->Fill(nx[i], ny[j], double(int(pow_gr[i]*100))/100.);
-    hh_pres->Fill(nx[i], ny[j], double(int(pres_gr[i]*100))/100.);
-    hh_cden->Fill(nx[i], ny[j], double(int(cden_final*100))/100.);
-    hh_cur->Fill(nx[i], ny[j], double(int(cur_single*100))/100.);
-    hh_lcond->Fill(nx[i], ny[j], double(int(0.0328084*lcond_total*100))/100.);
-    hh_steel->Fill(nx[i], ny[j], double(int(steel_mass/1000.*100))/100.);
+    hh_pow    ->Fill(nx[i], ny[j], double(int(pow_gr[i]*100))/100.);
+    hh_pres   ->Fill(nx[i], ny[j], double(int(pres_gr[i]*100))/100.);
+    hh_cden   ->Fill(nx[i], ny[j], double(int(cden_final*100))/100.);
+    hh_cur    ->Fill(nx[i], ny[j], double(int(cur_single*100))/100.);
+    hh_lcond  ->Fill(nx[i], ny[j], double(int(0.0328084*lcond_total*100))/100.);
+    hh_steel  ->Fill(nx[i], ny[j], double(int(steel_mass/1000.*100))/100.);
     hh_voltage->Fill(nx[i], ny[j], double(int(voltage_drop*100))/100.);
-    hh_resist->Fill(nx[i], ny[j], double(int(tot_resist*100))/100.);
+    hh_resist ->Fill(nx[i], ny[j], double(int(tot_resist*100))/100.);
   }
 
 
@@ -208,9 +261,6 @@ void cooling_calc(double nx1, double ny1, double field1)
   int n_model=8200;                                  //will be written in output file for the information
   ofstream cool_res;
   cool_res.open("results_cooling.txt", ios::out | ios::app );
-  double inch = 2.54;
-  double dcond = 0.25*inch;                           //conductor diameter
-  double dhole = 0.12*inch;                           //conductor hole diameter
 // Always remember!!!
 // b=5 in opera, means real width=3.28
   double nx = nx1;                                      //Number of turns in width
