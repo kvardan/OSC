@@ -39,8 +39,8 @@ void track_part_hel_und()
 
   if (i_und>=7000)
   {
-    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
     k_scale=339/401.;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
   }
 
 
