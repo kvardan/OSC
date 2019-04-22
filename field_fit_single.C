@@ -20,8 +20,8 @@ TGraph * gr_finite_abs;
 double scale=1.;
 
 int n;
-int n_und=8728;
-int current=300;
+int n_und=8162;
+int current=401;
 void field_fit_single()
 {
 /*
@@ -30,11 +30,7 @@ void field_fit_single()
   read_field_data_steel("../v7_osc_geom_steel_cor_field/hundulator_07_908_xyz.table");
 */
   n=1;
-  read_field_data(  Form("../v9_4_many_xare/hundulator_%d_%d_xyz.table", n_und, current));
-//  read_field_data(       "../v9_4_many_xare/hundulator_73_414_xyz.table");
-  if (n>=2)
-    read_field_data_finite("../v9_4_many_xare/hundulator_24_1130_xyz.table");
-//  read_field_data_steel( "../v9_4_many_xare/hundulator_05_908_xyz.table");
+  read_field_data(  Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", n_und, current));
 
   draw_plots();
 }

@@ -20,13 +20,13 @@ void track_part_hel_und()
   prepare_for_plots();
   k_scale=1.0;
 
-  i_und=82002;
-  int op3_cur=248;
+  i_und=8179;
+  int op3_cur=401;
 
 
   if (i_und==6)
   {
-    read_field("../v7_1_osc_geom_steel_cor_field_0.5_end_current_/hundulator_07_908_xyz.table");
+    read_field("/nfs/acc/user/vk348/opera/v7_1_osc_geom_steel_cor_field_0.5_end_current_/hundulator_07_908_xyz.table");
     // We need to give some initial parameters to get the electron trajectory (and the radiated light) as expected
 //    x_init=-1.*z_init*(-0.4354+0.0089301680)/130.-0.01+0.0257018;
 //    y_init=-0.0453053;
@@ -39,14 +39,8 @@ void track_part_hel_und()
 
   if (i_und>=7000)
   {
-    read_field(Form("../v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
-  }
-
-  if (i_und>=66737)
-  if (i_und<=66738)
-  {
-    read_field(Form("../v9_4_many_xare/hundulator_%d_463_xyz.table", i_und));
-//    k_scale=0.97;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+    k_scale=339/401.;
   }
 
 
