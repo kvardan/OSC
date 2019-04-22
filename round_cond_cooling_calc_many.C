@@ -29,27 +29,6 @@ string name[8]={"1to4_0.152", "1to4_0.12", "5to6_0.215", "5to16_0.183", "3to8_0.
 double dcond_set[8] = {1./4., 1./4., 5./16., 5./16., 3./8., 3./8., 1./2., 1./2.};
 double dhole_set[8] = {0.152,  0.12,  0.215,  0.183, 0.277, 0.245, 0.402,  0.37};
 int n_per_width_set[8]={  10,    10,      9,      9,     7,    7,      5,     5};
-/*
-1./4.
-1./4.
-5./16.
-5./16.
-3./8.
-3./8.
-1./2.
-1./2.
-5./8.
-
-1./4"		0.152"
-1./4"		0.12"
-5./16"		0.215"
-5./16"		0.183"
-3./8"		0.277"
-3./8"		0.245"
-1./2"		0.402"
-1./2"		0.37"
-5./8"		0.495"
-*/
 
 //double dcond_new=5./16.*inch;
 //double dhole_new=0.215*inch;
@@ -77,7 +56,7 @@ void round_cond_cooling_calc_many()
   for (int i=0; i<n_per_width; i++)    nx_old[i]=5. + double(i);
   for (int i=0; i<n_per_height; i++)   ny_old[i]=7. + double(i);
 
-  for (int i=0; i<n_per_width_new; i++)    nx_new[i]=4. + double(i);
+  for (int i=0; i<n_per_width_new; i++)    nx_new[i]=2. + double(i);
   for (int i=0; i<n_per_height_new; i++)   ny_new[i]=5. + double(i);
 
 /*
@@ -182,10 +161,10 @@ void round_cond_cooling_calc_many()
     ny_old[i]=ny_new[i];
     cout<<"i="<<i<<"      nx_old[i]="<<nx_old[i]<<"      ny_old[i]="<<ny_old[i]<<"      field_old[i]="<<field_old[i]<<endl;
   }
-  cout<<"please press enter to continue"<<endl;
 
-  cin.ignore();
-  cin.get();
+//  cout<<"please press enter to continue"<<endl;
+//  cin.ignore();
+//  cin.get();
 
 //  cout<<"sleeping"<<endl;
 //  int aaa=system("sleep 20s");
@@ -303,8 +282,8 @@ void plot_all()
 
   TGraph * gr_pow = new TGraph(n_per_width, nx_old, pow_gr);
   TGraph * gr_pres = new TGraph(n_per_width, nx_old, pres_gr);
-  gr_pow->SetMinimum(0);
-  gr_pres->SetMinimum(0);
+//tmp  gr_pow->SetMinimum(0);
+//tmp  gr_pres->SetMinimum(0);
 
 
   TCanvas *c_pow = new TCanvas("power", "power", 0, 0, 1000, 700);
@@ -324,14 +303,15 @@ void plot_all()
 
   gStyle->SetPalette(1);
   gStyle->SetOptStat(0);
-  hh_pow->SetMinimum(5);
-  hh_pres->SetMinimum(-2);
+//tmp  hh_pow->SetMinimum(5);
+//tmp  hh_pres->SetMinimum(-2);
   TCanvas *c_pow1 = new TCanvas("power1", "power1", 0, 800, 1000, 700);
   c_pow1->cd();
   c_pow1->SetGridx();
   c_pow1->SetGridy();
   hh_pow->Draw("colztext");
   c_pow1->SaveAs(Form("autosave_set_%d_%s_power.gif", sett[i_set], name[i_set].c_str()));
+  c_pow1->SaveAs(Form("gif/W/autosave_set_%d_%s_power.gif", sett[i_set], name[i_set].c_str()));
 
   TCanvas *c_pres1 = new TCanvas("pres1", "pres1", 1000, 800, 1000, 700);
   c_pres1->cd();
@@ -339,6 +319,7 @@ void plot_all()
   c_pres1->SetGridy();
   hh_pres->Draw("colztext");
   c_pres1->SaveAs(Form("autosave_set_%d_%s_pressure.gif", sett[i_set], name[i_set].c_str()));
+  c_pres1->SaveAs(Form("gif/P/autosave_set_%d_%s_pressure.gif", sett[i_set], name[i_set].c_str()));
 
   TCanvas *c_cden1 = new TCanvas("cden1", "cden1", 500, 400, 1000, 700);
   c_cden1->cd();
@@ -346,6 +327,7 @@ void plot_all()
   c_cden1->SetGridy();
   hh_cden->Draw("colztext");
   c_cden1->SaveAs(Form("autosave_set_%d_%s_current_density.gif", sett[i_set], name[i_set].c_str()));
+  c_cden1->SaveAs(Form("gif/I_den/autosave_set_%d_%s_current_density.gif", sett[i_set], name[i_set].c_str()));
 
   TCanvas *c_cur = new TCanvas("cur_sing", "cur_sing", 700, 400, 1000, 700);
   c_cur->cd();
@@ -353,6 +335,7 @@ void plot_all()
   c_cur->SetGridy();
   hh_cur->Draw("colztext");
   c_cur->SaveAs(Form("autosave_set_%d_%s_current_single.gif", sett[i_set], name[i_set].c_str()));
+  c_cur->SaveAs(Form("gif/I_single/autosave_set_%d_%s_current_single.gif", sett[i_set], name[i_set].c_str()));
 
   TCanvas *c_lcond = new TCanvas("lcond_sing", "lcond_sing", 100, 200, 1900, 1400);
   c_lcond->cd();
@@ -360,6 +343,7 @@ void plot_all()
   c_lcond->SetGridy();
   hh_lcond->Draw("colztext");
   c_lcond->SaveAs(Form("autosave_set_%d_%s_lcond.gif", sett[i_set], name[i_set].c_str()));
+  c_lcond->SaveAs(Form("gif/L/autosave_set_%d_%s_lcond.gif", sett[i_set], name[i_set].c_str()));
 
   TCanvas *c_steel = new TCanvas("steel", "steel", 700, 400, 1000, 700);
   c_steel->cd();
@@ -367,6 +351,7 @@ void plot_all()
   c_steel->SetGridy();
   hh_steel->Draw("colztext");
   c_steel->SaveAs(Form("autosave_set_%d_%s_steel_weight.gif", sett[i_set], name[i_set].c_str()));
+  c_steel->SaveAs(Form("gif/M_S/autosave_set_%d_%s_steel_weight.gif", sett[i_set], name[i_set].c_str()));
 
   TCanvas *c_volts = new TCanvas("volts", "volts", 700, 400, 1000, 700);
   c_volts->cd();
@@ -374,6 +359,7 @@ void plot_all()
   c_volts->SetGridy();
   hh_voltage->Draw("colztext");
   c_volts->SaveAs(Form("autosave_set_%d_%s_voltage_total.gif", sett[i_set], name[i_set].c_str()));
+  c_volts->SaveAs(Form("gif/V/autosave_set_%d_%s_voltage_total.gif", sett[i_set], name[i_set].c_str()));
 
   TCanvas *c_resist = new TCanvas("resist", "resist", 700, 400, 1000, 700);
   c_resist->cd();
@@ -381,6 +367,7 @@ void plot_all()
   c_resist->SetGridy();
   hh_resist->Draw("colztext");
   c_resist->SaveAs(Form("autosave_set_%d_%s_resistance_total.gif", sett[i_set], name[i_set].c_str()));
+  c_resist->SaveAs(Form("gif/R/autosave_set_%d_%s_resistance_total.gif", sett[i_set], name[i_set].c_str()));
 
 }
 
