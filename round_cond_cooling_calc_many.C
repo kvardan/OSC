@@ -1,51 +1,91 @@
 void cooling_calc(double , double, double );
 void plot_all();
+int get_n_central();
+
 double cool_pres, tot_power, cden_final, cur_single,lcond_total, steel_mass, voltage_drop, tot_resist;
-double nx[20], field[20], ny[12];
+double nx_old[20], field_old[20], ny_old[12];
 double inch = 2.54;
 double dcond = 0.25*inch;                           //conductor diameter
 double dhole = 0.12*inch;                           //conductor hole diameter
 
+double insul_y=0.03;
+double insul_x=0.021357;
+
+double cond_height_single = dcond+insul_y;
+double cond_width_single = dcond+insul_x;
+double pi=TMath::Pi();
+double RC0=4.5;
+double pitch=32.5;
+double alpha_dn=atan(2*pi*RC0/pitch);
+double frac_w_real=sin(alpha_dn);
+int n_per_width=11;
+int n_per_height=8;
+int ny_central=3;
+
+//double dcond_new=5./16.*inch;
+//double dhole_new=0.215*inch;
+double dcond_new=4./16.*inch;
+double dhole_new=0.152*inch;
+double nx_new[20], field_new[20], ny_new[12];
+int n_per_width_new=10;
+int n_per_height_new=10;
+double cond_height_single_new = dcond_new+insul_y;
+double cond_width_single_new = dcond_new+insul_x;
 
 void round_cond_cooling_calc_many()
 {
-  ny[0]=7;
-  ny[1]=8;
-  ny[2]=9;
-  ny[3]=10;
-  ny[4]=11;
-  ny[5]=12;
-  ny[6]=13;
-  ny[7]=14;
+/*
+  cout<<frac_w_real<<endl;
+  cout<<5.*frac_w_real<<endl;
+  cout<<cond_width_single*5./frac_w_real<<endl;
+  cout<<cond_height_single*10.<<endl;
+*/
 
 
-  nx[0]=5.0;
-  nx[1]=6.0;
-  nx[2]=7.0;
-  nx[3]=8.0;
-  nx[4]=9.0;
-  nx[5]=10.0;
-  nx[6]=11.0;
-  nx[7]=12.0;
-  nx[8]=13.0;
-  nx[9]=14.0;
-  nx[10]=15.0;
+  for (int i=0; i<n_per_width; i++)    nx_old[i]=5. + double(i);
+  for (int i=0; i<n_per_height; i++)   ny_old[i]=7. + double(i);
 
-  field[0]=1.020;
-  field[1]=1.204;
-  field[2]=1.377;
-  field[3]=1.537;
-  field[4]=1.682;
-  field[5]=1.811;
-  field[6]=1.920;
-  field[7]=2.008;
-  field[8]=2.072;
-  field[9]=2.107;
-  field[10]=2.073;
+  for (int i=0; i<n_per_width_new; i++)    nx_new[i]=4. + double(i);
+  for (int i=0; i<n_per_height_new; i++)   ny_new[i]=5. + double(i);
+
+/*
+  ny_old[0]=7;
+  ny_old[1]=8;
+  ny_old[2]=9;
+  ny_old[3]=10;
+  ny_old[4]=11;
+  ny_old[5]=12;
+  ny_old[6]=13;
+  ny_old[7]=14;
+
+
+  nx_old[0]=5.0;
+  nx_old[1]=6.0;
+  nx_old[2]=7.0;
+  nx_old[3]=8.0;
+  nx_old[4]=9.0;
+  nx_old[5]=10.0;
+  nx_old[6]=11.0;
+  nx_old[7]=12.0;
+  nx_old[8]=13.0;
+  nx_old[9]=14.0;
+  nx_old[10]=15.0;
+*/
+  field_old[0]=1.020;
+  field_old[1]=1.204;
+  field_old[2]=1.377;
+  field_old[3]=1.537;
+  field_old[4]=1.682;
+  field_old[5]=1.811;
+  field_old[6]=1.920;
+  field_old[7]=2.008;
+  field_old[8]=2.072;
+  field_old[9]=2.107;
+  field_old[10]=2.073;
 
   TCanvas *c_fld_cur = new TCanvas("c_fld_cur", "c_fld_cur");
   c_fld_cur->cd();
-  TGraph * gr_wid_field = new TGraph(11, nx, field);
+  TGraph * gr_wid_field = new TGraph(11, nx_old, field_old);
   gr_wid_field->SetTitle("Field vs current");
   gr_wid_field->SetMarkerStyle(20);
   gr_wid_field->Draw("AP");
@@ -59,6 +99,7 @@ void round_cond_cooling_calc_many()
   double par_4 = pol_fit->GetParameter(4);
   double par_5 = pol_fit->GetParameter(5);
   double par_6 = pol_fit->GetParameter(6);
+
   cout<<"par0="<<par_0<<endl;
   cout<<"par1="<<par_1<<endl;
   cout<<"par2="<<par_2<<endl;
@@ -70,7 +111,49 @@ void round_cond_cooling_calc_many()
 
 
 
-  double width_new=0.25*inch;
+  for (int i=0; i<n_per_width_new; i++)
+  {
+    double x_new=nx_new[i]*(dcond_new+insul_x)/frac_w_real;
+    field_new[i]=par_0+par_1*x_new+par_2*pow(x_new,2)+par_3*pow(x_new,3)+par_4*pow(x_new,4)+par_5*pow(x_new,5)+par_6*pow(x_new,6);
+    field_new[i]*=cond_height_single_new/cond_height_single;
+    cout<<i<<"     "<<x_new<<"          "<<field_new[i]<<endl;
+  }
+  for (int i=0; i<20; i++)
+  {
+    cout<<"i="<<i<<"      nx_new[i]="<<nx_new[i]<<"      ny_new[i]="<<ny_new[i]<<endl;
+  }
+
+  cout<<"new central = "<<get_n_central()<<"      ny_cen[]="<<ny_old[ny_central]<<"      ny_cen_new[]="<<ny_new[get_n_central()]<<endl;
+
+  ny_central=get_n_central();
+  dcond=dcond_new;
+  dhole=dhole_new;
+  n_per_width=n_per_width_new;
+  n_per_height=n_per_height_new;
+  cond_height_single=cond_height_single_new;
+  cond_width_single=cond_width_single_new;
+
+  cout<<"dcond="<<dcond<<endl;
+  cout<<"dhole="<<dhole<<endl;
+  cout<<"n_per_width="<<n_per_width_new<<endl;
+  cout<<"n_per_height="<<n_per_height_new<<endl;
+  cout<<"cond_height_single="<<cond_height_single_new<<endl;
+  cout<<"cond_width_single="<<cond_width_single_new<<endl;
+
+  for (int i=0; i<n_per_width; i++)
+  {
+    nx_old[i]=nx_new[i];
+    field_old[i]=field_new[i];
+  }
+  for (int i=0; i<n_per_height; i++)
+  {
+    ny_old[i]=ny_new[i];
+    cout<<"i="<<i<<"      nx_old[i]="<<nx_old[i]<<"      ny_old[i]="<<ny_old[i]<<"      field_old[i]="<<field_old[i]<<endl;
+  }
+
+
+//  int aaa=system("sleep 20s");
+
 /*
   double x=7;
   cout<<"fn="<<par_0+par_1*x+par_2*x*x+par_3*x*x*x+par_4*x*x*x*x+par_5*x*x*x*x*x+par_6*x*x*x*x*x*x<<endl;
@@ -85,19 +168,25 @@ void round_cond_cooling_calc_many()
   x=12;
   cout<<"fn="<<par_0+par_1*x+par_2*x*x+par_3*x*x*x+par_4*x*x*x*x+par_5*x*x*x*x*x+par_6*x*x*x*x*x*x<<endl;
 */
+
+
+  //+1. scale the field down for radial dimension (central row, ny_central)
+  //+2. get new field[]... from fit parameters
+  //-3. correct nx_old[], ny_old[]
+  //-4. test for 2*width, 2*height
   plot_all();
 }
 
 void plot_all()
 {
-  TH2D * hh_pres = new TH2D ("Water pressure vs conductor geometry", "Water pressure vs conductor geometry", 11, 4.5, 15.5, 8, 6.5, 14.5);
-  TH2D * hh_pow  = new TH2D ("Total power vs conductor geometry",   "Total power vs conductor geometry", 11, 4.5, 15.5, 8, 6.5, 14.5);
-  TH2D * hh_cden = new TH2D ("Current density vs conductor geometry", "Current density vs conductor geometry", 11, 4.5, 15.5, 8, 6.5, 14.5);
-  TH2D * hh_cur  = new TH2D ("Current for single wire", "Current for single wire", 11, 4.5, 15.5, 8, 6.5, 14.5);
-  TH2D * hh_lcond  = new TH2D ("lcond", "lcond", 11, 4.5, 15.5, 8, 6.5, 14.5);
-  TH2D * hh_steel  = new TH2D ("steel", "steel", 11, 4.5, 15.5, 8, 6.5, 14.5);
-  TH2D * hh_voltage= new TH2D ("volts", "volts", 11, 4.5, 15.5, 8, 6.5, 14.5);
-  TH2D * hh_resist = new TH2D ("resist", "resist", 11, 4.5, 15.5, 8, 6.5, 14.5);
+  TH2D * hh_pres = new TH2D ("Water pressure vs conductor geometry", "Water pressure vs conductor geometry", 15, 0.5, 15.5, 14, 0.5, 14.5);
+  TH2D * hh_pow  = new TH2D ("Total power vs conductor geometry",   "Total power vs conductor geometry", 15, 0.5, 15.5, 14, 0.5, 14.5);
+  TH2D * hh_cden = new TH2D ("Current density vs conductor geometry", "Current density vs conductor geometry", 15, 0.5, 15.5, 14, 0.5, 14.5);
+  TH2D * hh_cur  = new TH2D ("Current for single wire", "Current for single wire", 15, 0.5, 15.5, 14, 0.5, 14.5);
+  TH2D * hh_lcond  = new TH2D ("lcond", "Cond total length vs conductor geometry", 15, 0.5, 15.5, 14, 0.5, 14.5);
+  TH2D * hh_steel  = new TH2D ("steel", "Steel weight vs conductor geometry", 15, 0.5, 15.5, 14, 0.5, 14.5);
+  TH2D * hh_voltage= new TH2D ("volts", "Total voltage vs conductor geometry", 15, 0.5, 15.5, 14, 0.5, 14.5);
+  TH2D * hh_resist = new TH2D ("resist", "Total resistance vs conductor geometry", 15, 0.5, 15.5, 14, 0.5, 14.5);
 
   hh_pres->GetXaxis()->SetTitle("Nr of conductors per width");
   hh_pres->GetYaxis()->SetTitle("Nr of conductors per height (radial)");
@@ -126,26 +215,27 @@ void plot_all()
   int i=0;
   int j=3;
 
-  for (j =0; j<8; j++)
-  for (i =0; i<11; i++)
+  for (j =0; j<n_per_height; j++)
+  for (i =0; i<n_per_width; i++)
 //  for (j =4; j<5; j++)
 //  for (i =1; i<2; i++)
   {
     lcond_total=0;
     voltage_drop=0;
     tot_resist=0;
-    steel_mass=(32.5-nx[i]*2.)/32.5*3.1415927*((4.5+0.665*ny[j])*(4.5+0.665*ny[j])-4.5*4.5)*32.5*14.*7.850;
-    cooling_calc(nx[i], ny[j], field[i]*ny[j]/10.);
+    steel_mass=(pitch-(cond_width_single/frac_w_real)*nx_old[i]*2.)/pitch*pi*((RC0+cond_height_single*ny_old[j])*(RC0+cond_height_single*ny_old[j])-RC0*RC0)*pitch*14.*7.850;
+//    cout<<i<<"       "<<j<<"    inside loop    nx="<<nx_old[i]<<"    ny="<<ny_old[j]<<"    scaled field="<<field_old[i]*ny_old[j]/ny_old[ny_central]<<endl;
+    cooling_calc(nx_old[i], ny_old[j], field_old[i]*ny_old[j]/ny_old[ny_central]);
     pow_gr[i]=tot_power/1000.;
     pres_gr[i]=cool_pres;
-    hh_pow    ->Fill(nx[i], ny[j], double(int(pow_gr[i]*100))/100.);
-    hh_pres   ->Fill(nx[i], ny[j], double(int(pres_gr[i]*100))/100.);
-    hh_cden   ->Fill(nx[i], ny[j], double(int(cden_final*100))/100.);
-    hh_cur    ->Fill(nx[i], ny[j], double(int(cur_single*100))/100.);
-    hh_lcond  ->Fill(nx[i], ny[j], double(int(0.0328084*lcond_total*100))/100.);
-    hh_steel  ->Fill(nx[i], ny[j], double(int(steel_mass/1000.*100))/100.);
-    hh_voltage->Fill(nx[i], ny[j], double(int(voltage_drop*100))/100.);
-    hh_resist ->Fill(nx[i], ny[j], double(int(tot_resist*100))/100.);
+    hh_pow    ->Fill(nx_old[i], ny_old[j], double(int(pow_gr[i]*100))/100.);
+    hh_pres   ->Fill(nx_old[i], ny_old[j], double(int(pres_gr[i]*100))/100.);
+    hh_cden   ->Fill(nx_old[i], ny_old[j], double(int(cden_final*100))/100.);
+    hh_cur    ->Fill(nx_old[i], ny_old[j], double(int(cur_single*100))/100.);
+    hh_lcond  ->Fill(nx_old[i], ny_old[j], double(int(0.0328084*lcond_total*0.1))/0.1);  //cm to ft
+    hh_steel  ->Fill(nx_old[i], ny_old[j], double(int(steel_mass/1000.*100))/100.);
+    hh_voltage->Fill(nx_old[i], ny_old[j], double(int(voltage_drop*100))/100.);
+    hh_resist ->Fill(nx_old[i], ny_old[j], double(int(tot_resist*100))/100.);
   }
 
 
@@ -153,29 +243,29 @@ void plot_all()
 //  for (j =0; j<8; j++)
   for (i =0; i<11; i++)
   {
-    cooling_calc(nx[i], ny[j], field[i]*ny[j]/10.);
+    cooling_calc(nx_old[i], ny_old[j], field_old[i]*ny_old[j]/10.);
     pow_gr[i]=tot_power/1000.;
     pres_gr[i]=cool_pres;
-    hh_pow->Fill(nx[i], ny[j], pow_gr[i]);
-    hh_pres->Fill(nx[i], ny[j], pres_gr[i]);
-    hh_cden->Fill(nx[i], ny[j], cden_final);
+    hh_pow->Fill(nx_old[i], ny_old[j], pow_gr[i]);
+    hh_pres->Fill(nx_old[i], ny_old[j], pres_gr[i]);
+    hh_cden->Fill(nx_old[i], ny_old[j], cden_final);
   }
 
   i=5;
   for (j=0; j<6; j++)
   if (j!=3)
   {
-    cooling_calc(nx[i], ny[j], field[i]*ny[j]/10.);
+    cooling_calc(nx_old[i], ny_old[j], field_old[i]*ny_old[j]/10.);
     pow_gr[i]=tot_power/1000.;
     pres_gr[i]=cool_pres;
-    hh_pow->Fill(nx[i], ny[j], pow_gr[i]);
-    hh_pres->Fill(nx[i], ny[j], pres_gr[i]);
-    hh_cden->Fill(nx[i], ny[j], cden_final);
+    hh_pow->Fill(nx_old[i], ny_old[j], pow_gr[i]);
+    hh_pres->Fill(nx_old[i], ny_old[j], pres_gr[i]);
+    hh_cden->Fill(nx_old[i], ny_old[j], cden_final);
   }
 */
 
-  TGraph * gr_pow = new TGraph(11, nx, pow_gr);
-  TGraph * gr_pres = new TGraph(11, nx, pres_gr);
+  TGraph * gr_pow = new TGraph(n_per_width, nx_old, pow_gr);
+  TGraph * gr_pres = new TGraph(n_per_width, nx_old, pres_gr);
   gr_pow->SetMinimum(0);
   gr_pres->SetMinimum(0);
 
@@ -185,7 +275,7 @@ void plot_all()
   c_pow->SetGridx();
   c_pow->SetGridy();
   gr_pow->Draw("AP*");
-  c_pow->SaveAs("test_pow.gif");
+  c_pow->SaveAs("autosave_test_pow.gif");
 
 
   TCanvas *c_pres = new TCanvas("pres", "pres", 1000, 0, 1000, 700);
@@ -193,7 +283,7 @@ void plot_all()
   c_pres->SetGridx();
   c_pres->SetGridy();
   gr_pres->Draw("AP*");
-  c_pres->SaveAs("test_pres.gif");
+  c_pres->SaveAs("autosave_test_pres.gif");
 
   gStyle->SetPalette(1);
   gStyle->SetOptStat(0);
@@ -204,48 +294,56 @@ void plot_all()
   c_pow1->SetGridx();
   c_pow1->SetGridy();
   hh_pow->Draw("colztext");
+  c_pow1->SaveAs("autosave_power.gif");
 
   TCanvas *c_pres1 = new TCanvas("pres1", "pres1", 1000, 800, 1000, 700);
   c_pres1->cd();
   c_pres1->SetGridx();
   c_pres1->SetGridy();
   hh_pres->Draw("colztext");
+  c_pres1->SaveAs("autosave_pressure.gif");
 
   TCanvas *c_cden1 = new TCanvas("cden1", "cden1", 500, 400, 1000, 700);
   c_cden1->cd();
   c_cden1->SetGridx();
   c_cden1->SetGridy();
   hh_cden->Draw("colztext");
+  c_cden1->SaveAs("autosave_current_density.gif");
 
   TCanvas *c_cur = new TCanvas("cur_sing", "cur_sing", 700, 400, 1000, 700);
   c_cur->cd();
   c_cur->SetGridx();
   c_cur->SetGridy();
   hh_cur->Draw("colztext");
+  c_cur->SaveAs("autosave_current_single.gif");
 
-  TCanvas *c_lcond = new TCanvas("lcond_sing", "lcond_sing", 700, 400, 1000, 700);
+  TCanvas *c_lcond = new TCanvas("lcond_sing", "lcond_sing", 100, 200, 1900, 1400);
   c_lcond->cd();
   c_lcond->SetGridx();
   c_lcond->SetGridy();
   hh_lcond->Draw("colztext");
+  c_lcond->SaveAs("autosave_lcond.gif");
 
-  TCanvas *c_steel = new TCanvas("steel_sing", "steel_sing", 700, 400, 1000, 700);
+  TCanvas *c_steel = new TCanvas("steel", "steel", 700, 400, 1000, 700);
   c_steel->cd();
   c_steel->SetGridx();
   c_steel->SetGridy();
   hh_steel->Draw("colztext");
+  c_steel->SaveAs("autosave_steel_weight.gif");
 
   TCanvas *c_volts = new TCanvas("volts", "volts", 700, 400, 1000, 700);
   c_volts->cd();
   c_volts->SetGridx();
   c_volts->SetGridy();
   hh_voltage->Draw("colztext");
+  c_volts->SaveAs("autosave_voltage_total.gif");
 
   TCanvas *c_resist = new TCanvas("resist", "resist", 700, 400, 1000, 700);
   c_resist->cd();
   c_resist->SetGridx();
   c_resist->SetGridy();
   hh_resist->Draw("colztext");
+  c_resist->SaveAs("autosave_resistance_total.gif");
 
 }
 
@@ -266,8 +364,8 @@ void cooling_calc(double nx1, double ny1, double field1)
   double nx = nx1;                                      //Number of turns in width
   double ny = ny1;                                      //Number of turns in height
   double n_period=14.;                                 //number of undulator periods
-  double tot_width=nx*dcond;                          //total width of helix conductor
-  double tot_height=ny*dcond;                         //total width of helix conductor
+  double tot_width=nx*dcond;                           //total width of helix conductor
+  double tot_height=ny*dcond;                          //total width of helix conductor
   double field=field1;
 
 
@@ -283,7 +381,6 @@ void cooling_calc(double nx1, double ny1, double field1)
 //  portion = 1.;                                       //field scale
   double op3_cur_den=300;
   double current=op3_cur_den*tot_width*tot_height*portion;  //total current per helix
-  double pi=TMath::Pi();
   double deltat = 35;
 
   double ahole = pi*(dhole*dhole)/4.;                 // conductor corner radius
@@ -295,6 +392,7 @@ void cooling_calc(double nx1, double ny1, double field1)
   double pscurr = current/(nx*ny);                    // Power supply current
 
 //  cout<<"model No:"<<n_model<<endl;
+//  cout<<"       nx="<<nx<<",  ny="<<ny<<",  cur_dens="<<op3_cur_den*portion<<" A/cm2,    pow. sup current = "<<pscurr<<" Amps,   diam_cond="<<dcond<<" cm,    diam_hole="<<dhole<<" cm"<<endl;
   cool_res<<"nx="<<nx<<",  ny="<<ny<<",  cur_dens="<<op3_cur_den*portion<<" A/cm2,    pow. sup current = "<<pscurr<<" Amps,   diam_cond="<<dcond<<" cm,    diam_hole="<<dhole<<" cm"<<endl;
 //  cout<<"Width = "<<tot_width<<"     (opera width = "<<tot_width/3.28*5<<")"<<endl;
 //  cout<<"height = "<<tot_height<<endl;
@@ -332,6 +430,9 @@ void cooling_calc(double nx1, double ny1, double field1)
     double lcirc = 0.01*lcond;                          // Length per water circuit in meters
     total_power+=2.*powcoil;
     total_volts+=2.*psvolts;
+//    cout<<"                          0:    pscur="<<pscurr<<"     res="<<rescoil<<"     dhole="<<dhole<<"     dCOND="<<dcond<<"     A_COND="<<acond<<"     res="<<rescoil<<endl;
+//    cout<<"                          1: "<<total_power<<"    "<<total_volts<<endl;
+//    cout<<"                          2: "<<2.*powcoil<<"    "<<2.*psvolts<<endl;
 
 //    cout<<"inner radius = "<<rad<<",    lturn="<<lturn<<endl;
 //    cout<<"cur den = "<<op3_cur_den*portion<<endl;
@@ -485,4 +586,21 @@ void cooling_calc(double nx1, double ny1, double field1)
 
   // End of cooling calculation
   //------------------------------------
+}
+
+int get_n_central()
+{
+  double i_central=-1;
+  double diff=100000;
+  for (int i=0; i<n_per_height_new; i++)
+  {
+    double y_central = ny_old[ny_central]*cond_height_single;
+    double y_tmp = ny_new[i]*cond_height_single_new;
+    if (diff > fabs(y_tmp-y_central))
+    {
+      diff = fabs(y_tmp-y_central);
+      i_central=i;
+    }
+  }
+  return i_central;
 }
