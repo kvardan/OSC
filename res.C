@@ -5,7 +5,7 @@ Double_t myfunction(Double_t *, Double_t *);
 
 Double_t myfunction(Double_t *x, Double_t *par)
 {
-  double f1 = par[1]*sin(par[2]*(x[0]-par[0]))-par[3];
+  double f1 = par[1]*cos(par[2]*(x[0]-par[0]))-par[3];
   return f1;
 }
 
@@ -34,7 +34,6 @@ Double_t myfunction(Double_t *x, Double_t *par)
 
 void res()
 {
-
   double l_cut_cyl[30];
   double l_cut_spir[30];
   double xp[30];
@@ -45,30 +44,40 @@ void res()
   l_cut_spir[2]= 0.50; l_cut_cyl[2]=0.0;
   l_cut_spir[3]= 0.25; l_cut_cyl[3]=0.0;
   l_cut_spir[4]= 0.00; l_cut_cyl[4]=0.0;
-  l_cut_spir[5]= 1.00; l_cut_cyl[5]=0.5;
-  l_cut_spir[6]= 0.75; l_cut_cyl[6]=0.5;
-  l_cut_spir[7]= 0.50; l_cut_cyl[7]=0.5;
-  l_cut_spir[8]= 0.25; l_cut_cyl[8]=0.5;
-  l_cut_spir[9]= 0.00; l_cut_cyl[9]=0.5;
-  l_cut_spir[10]= 1.00; l_cut_cyl[10]=0.25;
-  l_cut_spir[11]= 0.75; l_cut_cyl[11]=0.25;
-  l_cut_spir[12]= 0.50; l_cut_cyl[12]=0.25;
-  l_cut_spir[13]= 0.25; l_cut_cyl[13]=0.25;
-  l_cut_spir[14]= 0.00; l_cut_cyl[14]=0.25;
-  l_cut_spir[15]= 1.00; l_cut_cyl[15]=0.1;
-  l_cut_spir[16]= 0.75; l_cut_cyl[16]=0.1;
-  l_cut_spir[17]= 0.50; l_cut_cyl[17]=0.1;
-  l_cut_spir[18]= 0.25; l_cut_cyl[18]=0.1;
-  l_cut_spir[19]= 0.00; l_cut_cyl[19]=0.1;
-  l_cut_spir[20]= 1.00; l_cut_cyl[20]=-0.14;
-  l_cut_spir[21]= 0.75; l_cut_cyl[21]=-0.14;
-  l_cut_spir[22]= 0.50; l_cut_cyl[22]=-0.14;
-  l_cut_spir[23]= 0.25; l_cut_cyl[23]=-0.14;
-  l_cut_spir[24]= 0.00; l_cut_cyl[24]=-0.14;
-  l_cut_spir[26]= 0.75; l_cut_cyl[26]=-0.30;
-  l_cut_spir[27]= 0.50; l_cut_cyl[27]=-0.30;
-  l_cut_spir[28]= 0.25; l_cut_cyl[28]=-0.30;
-  l_cut_spir[29]= 0.00; l_cut_cyl[29]=-0.30;
+  l_cut_spir[5]= 1.00; l_cut_cyl[5]=0.2;
+  l_cut_spir[6]= 0.75; l_cut_cyl[6]=0.2;
+  l_cut_spir[7]= 0.50; l_cut_cyl[7]=0.2;
+  l_cut_spir[8]= 0.25; l_cut_cyl[8]=0.2;
+  l_cut_spir[9]= 0.00; l_cut_cyl[9]=0.2;
+  l_cut_spir[10]= 1.00; l_cut_cyl[10]=-0.10;
+  l_cut_spir[11]= 0.75; l_cut_cyl[11]=-0.10;
+  l_cut_spir[12]= 0.50; l_cut_cyl[12]=-0.10;
+  l_cut_spir[13]= 0.25; l_cut_cyl[13]=-0.10;
+  l_cut_spir[14]= 0.00; l_cut_cyl[14]=-0.10;
+  l_cut_spir[15]= 1.00; l_cut_cyl[15]=0.4;
+  l_cut_spir[16]= 0.75; l_cut_cyl[16]=0.4;
+  l_cut_spir[17]= 0.50; l_cut_cyl[17]=0.4;
+  l_cut_spir[18]= 0.25; l_cut_cyl[18]=0.4;
+  l_cut_spir[19]= 0.00; l_cut_cyl[19]=0.4;
+
+
+  xp[1]=0.406833;     yp[1]=-0.913596;
+  xp[2]=-0.444077;    yp[2]=0.404128;
+  xp[3]=-0.115885;    yp[3]=1.95737;
+  xp[4]=1.34078;      yp[4]=2.82063;
+  xp[6]=0.187661;     yp[6]=-0.961779;
+  xp[7]=-0.673635;    yp[7]=0.360873;
+  xp[8]=-0.278407;    yp[8]=1.97899;
+  xp[9]=1.31989;      yp[9]=2.83662;
+  xp[11]=0.526071;    yp[11]=-0.927912;
+  xp[12]=-0.341205;   yp[12]=0.389801;
+  xp[13]=0.0011244;   yp[13]=1.93769;
+  xp[14]=1.38458;     yp[14]=2.78604;
+  xp[16]=0.0279296;   yp[16]=-1.09873;
+  xp[17]=-0.829921;   yp[17]=0.279746;
+  xp[18]=-0.346707;   yp[18]=1.98255;
+  xp[19]=1.32065;     yp[19]=2.8236;
+
 
 /*
   xp[0]=2.59522;     yp[0]=-1.03679;
@@ -91,18 +100,18 @@ void res()
   xp[22]=0.541849;    yp[22]=-0.49287;
   xp[23]=0.188955;    yp[23]=0.983634;
   xp[24]=1.02946;     yp[24]=2.24046;
-*/
   xp[26]=1.99433;     yp[26]=-1.31661;
   xp[27]=0.715064;    yp[27]=-0.535741;
   xp[28]=0.355521;    yp[28]=0.936828;
   xp[29]=1.16059;     yp[29]=2.2051;
+*/
 
 
 
 
-  TH2D * hh_1 =  new TH2D("", "P_{x, 0} vs steel geometry", 11,  -0.32, 0.56, 5, -0.125, 1.125);
-  TH2D * hh_2 =  new TH2D("", "P_{y, 0} vs steel geometry", 11,  -0.32, 0.56, 5, -0.125, 1.125);
-  TH2D * hh_3 =  new TH2D("", "P_{t, 0} vs steel geometry", 11,  -0.32, 0.56, 5, -0.125, 1.125);
+  TH2D * hh_1 =  new TH2D("", "P_{x, 0} vs steel geometry", 7,  -0.15, 0.55, 5, -0.125, 1.125);
+  TH2D * hh_2 =  new TH2D("", "P_{y, 0} vs steel geometry", 7,  -0.15, 0.55, 5, -0.125, 1.125);
+  TH2D * hh_3 =  new TH2D("", "P_{t, 0} vs steel geometry", 7,  -0.15, 0.55, 5, -0.125, 1.125);
   for (int i=0; i<30; i++)
   if (fabs(xp[i])>1.e-10)
   {
@@ -115,22 +124,24 @@ void res()
   myfunc->SetParNames("P_{0}","P_{1}","P_{2}", "P_{3}");
 
   myfunc->SetParameter(1, 2);
-  myfunc->SetParLimits(1, 1, 5);
+  myfunc->SetParLimits(1, 0.1, 5);
   myfunc->SetParLimits(2, 0.1, 10.);
+//  myfunc->SetParLimits(1, 1, 5);
+//  myfunc->SetParLimits(2, 0.1, 10.);
 
 
   TH1D *hy_proj[10];
   double gr_py_0_x[20];
   double gr_py_0_y[20];
   int ny_gr=0;
-  for (int ii=1; ii<=11; ii++)
+  for (int ii=1; ii<=7; ii++)
   {
     hy_proj[ii-1] = hh_2->ProjectionY(Form("projy_%d", ii), ii, ii);
     hy_proj[ii-1]->SetTitle(Form("hy_proj %d",ii));
     if (get_bin_n(hy_proj[ii-1], 5)>=3)
     {
-      TCanvas *c_proj = new TCanvas(Form("cy_proj %d",ii), Form("cy_proj %d", ii), 1000, 800, 1000, 1000);
-      c_proj->cd();
+      TCanvas *c_proj_y = new TCanvas(Form("cy_proj %d",ii), Form("cy_proj %d", ii), 1000, 800, 1000, 1000);
+      c_proj_y->cd();
       hy_proj[ii-1]->Draw();
       hy_proj[ii-1]->Fit("myfunc", "R");
       double par_0=myfunc->GetParameter(0);
@@ -138,7 +149,7 @@ void res()
       double par_2=myfunc->GetParameter(2);
       double par_3=myfunc->GetParameter(3);
 //      double f1 = par[1]*sin(par[2]*(x[0]-par[0]))-par[3];
-      double asin_part=asin(par_3/par_1);
+      double asin_part=acos(par_3/par_1);
       cout<<"asin="<<asin_part<<endl;
       double py_0 = (asin_part+par_0*par_2)/par_2;
       cout<<"--------------------------------------------------------------------------------------------------------------->"<<py_0<<endl;
@@ -154,7 +165,7 @@ void res()
 //      if ((asin_part+par_0*par_2) < 0) asin_part=0.5*3.1415927-asin_part;
     }
   }
-  TGraph *gr_y = new TGraph (ny_gr, gr_py_0_x, gr_py_0_y);
+  TGraph *gr_y = new TGraph(ny_gr, gr_py_0_x, gr_py_0_y);
   gr_y->SetMarkerColor(2);
   gr_y->SetMarkerStyle(3);
   gr_y->SetMarkerSize(2);
@@ -171,14 +182,14 @@ void res()
   double gr_px_0_x[20];
   double gr_px_0_y[20];
   int nx_gr=0;
-  for (int ii=1; ii<=11; ii++)
+  for (int ii=1; ii<=7; ii++)
   {
     hx_proj[ii-1] = hh_1->ProjectionY(Form("projx_%d", ii), ii, ii);
     hx_proj[ii-1]->SetTitle(Form("hx_proj %d",ii));
     if (get_bin_n(hx_proj[ii-1], 5)>=3)
     {
-      TCanvas *c_proj = new TCanvas(Form("cx_proj %d",ii), Form("cx_proj %d", ii), 1000, 800, 1000, 1000);
-      c_proj->cd();
+      TCanvas *c_proj_x = new TCanvas(Form("cx_proj_x %d",ii), Form("cx_proj_x %d", ii), 1000, 800, 1000, 1000);
+      c_proj_x->cd();
 
       hx_proj[ii-1]->Draw();
       hx_proj[ii-1]->Fit("myfunc", "R");
@@ -186,16 +197,19 @@ void res()
       double par_1=myfunc->GetParameter(1);
       double par_2=myfunc->GetParameter(2);
       double par_3=myfunc->GetParameter(3);
-//      double f1 = par[1]*sin(par[2]*(x[0]-par[0]))-par[3];
-      double asin_part=asin(par_3/par_1);
+//      double f1 = par[1]*cos(par[2]*(x[0]-par[0]))-par[3];
+      double asin_part=acos(par_3/par_1);
       cout<<"asin="<<asin_part<<endl;
-      double px_0 = (asin_part+par_0*par_2)/par_2;
+      double px_0 = (2.*3.1415927-1.*asin_part+par_0*par_2)/par_2;
+//      px_0 = (asin_part+par_0*par_2)/par_2;
       cout<<"--------------------------------------------------------------------------------------------------------------->"<<px_0<<endl;
+/*
       if (px_0<0)
       {
         px_0=((3.1415927-asin_part)+par_0*par_2)/par_2;
         cout<<"--------------------------------------------------------------------------------------------------------------->"<<px_0<<endl<<endl;
       }
+*/
       gr_px_0_x[nx_gr] = hh_1->GetXaxis()->GetBinCenter(ii);
       gr_px_0_y[nx_gr] = px_0;
       cout<<ii<<"    "<<gr_px_0_x[nx_gr]<<" --------------------------------------------------------------------------------------------------------------->"<<px_0<<endl<<endl<<endl<<endl;
@@ -209,6 +223,22 @@ void res()
   gr_x->SetMarkerColor(4);
   gr_x->SetMarkerStyle(3);
   gr_x->SetMarkerSize(2);
+  TF1 *poll2 = new TF1("poll2", "pol2");
+  gr_x->Fit("poll2");
+  double par0_x=poll2->GetParameter(0);
+  double par1_x=poll2->GetParameter(1);
+  double par2_x=poll2->GetParameter(2);
+  gr_y->Fit("poll2");
+  double par0_y=poll2->GetParameter(0);
+  double par1_y=poll2->GetParameter(1);
+  double par2_y=poll2->GetParameter(2);
+  double aa=par2_y-par2_x;
+  double bb=par1_y-par1_x;
+  double cc=par0_y-par0_x;
+//  (p2y-p2x)*x*x+(p1y-p1x)*x+(p0y-p0x)=0
+  double x01=-1.*bb+sqrt(bb*bb-4.*aa*cc)/2./aa;
+  double x02=-1.*bb-sqrt(bb*bb-4.*aa*cc)/2./aa;
+  cout<<"x1="<<x01<<"        x2="<<x02<<endl;
 
 
 

@@ -20,8 +20,8 @@ void track_part_hel_und()
   prepare_for_plots();
   k_scale=1.0;
 
-  i_und=8179;
-  int op3_cur=401;
+  i_und=8183;
+  int op3_cur=339;
 
 
   if (i_und==6)
@@ -39,7 +39,7 @@ void track_part_hel_und()
 
   if (i_und>=7000)
   {
-    k_scale=339/401.;
+//    k_scale=339/401.;
     read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
   }
 
