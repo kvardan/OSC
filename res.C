@@ -201,7 +201,7 @@ void res()
       double asin_part=acos(par_3/par_1);
       cout<<"asin="<<asin_part<<endl;
       double px_0 = (2.*3.1415927-1.*asin_part+par_0*par_2)/par_2;
-//      px_0 = (asin_part+par_0*par_2)/par_2;
+      px_0 = (asin_part+par_0*par_2)/par_2;
       cout<<"--------------------------------------------------------------------------------------------------------------->"<<px_0<<endl;
 /*
       if (px_0<0)

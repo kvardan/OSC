@@ -726,7 +726,7 @@ void make_plots()
   cc->cd(3+2*div_nx);
   gr_zpxy->Draw("*P");
 */
-  cc->SaveAs(Form("%d_autosave.gif", i_und));
+  cc->SaveAs(Form("gif/tracks/%d_autosave.gif", i_und));
 }
 
 int get_i_from_z(double zz_tmp)
