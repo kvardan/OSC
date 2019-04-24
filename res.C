@@ -201,7 +201,7 @@ void res()
       double asin_part=acos(par_3/par_1);
       cout<<"asin="<<asin_part<<endl;
       double px_0 = (2.*3.1415927-1.*asin_part+par_0*par_2)/par_2;
-      px_0 = (asin_part+par_0*par_2)/par_2;
+//      px_0 = (asin_part+par_0*par_2)/par_2;
       cout<<"--------------------------------------------------------------------------------------------------------------->"<<px_0<<endl;
 /*
       if (px_0<0)
@@ -223,15 +223,19 @@ void res()
   gr_x->SetMarkerColor(4);
   gr_x->SetMarkerStyle(3);
   gr_x->SetMarkerSize(2);
-  TF1 *poll2 = new TF1("poll2", "pol2");
-  gr_x->Fit("poll2");
-  double par0_x=poll2->GetParameter(0);
-  double par1_x=poll2->GetParameter(1);
-  double par2_x=poll2->GetParameter(2);
-  gr_y->Fit("poll2");
-  double par0_y=poll2->GetParameter(0);
-  double par1_y=poll2->GetParameter(1);
-  double par2_y=poll2->GetParameter(2);
+  TF1 *pollx2 = new TF1("pollx2", "pol2");
+  TF1 *polly2 = new TF1("polly2", "pol2");
+  pollx2->SetLineColor(4);
+  gr_x->Fit("pollx2");
+  double par0_x=pollx2->GetParameter(0);
+  double par1_x=pollx2->GetParameter(1);
+  double par2_x=pollx2->GetParameter(2);
+
+  polly2->SetLineColor(2);
+  gr_y->Fit("polly2");
+  double par0_y=polly2->GetParameter(0);
+  double par1_y=polly2->GetParameter(1);
+  double par2_y=polly2->GetParameter(2);
   double aa=par2_y-par2_x;
   double bb=par1_y-par1_x;
   double cc=par0_y-par0_x;
@@ -245,7 +249,7 @@ void res()
 
   gStyle->SetPalette(1);
   gStyle->SetOptStat(0);
-  gStyle->SetOptFit(1);
+  gStyle->SetOptFit(0);
   TCanvas *c = new TCanvas("c", "c", 0, 0, 2000, 1000);
   c->cd();
 //  c->Divide(3,1);

@@ -20,8 +20,8 @@ TGraph * gr_finite_abs;
 double scale=1.;
 
 int n;
-int n_und=8162;
-int current=401;
+int n_und=8335;
+int current=300;
 void field_fit_single()
 {
 /*
@@ -301,7 +301,7 @@ void draw_plots()
   l4_1->Draw();
   l4_2->Draw();
 //  leg->Draw();
-  c->SaveAs(Form("field_%d.gif", n_und));
+  c->SaveAs(Form("gif/field/field_%d.gif", n_und));
 }
 
 void read_field_data(string fname)

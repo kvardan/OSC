@@ -448,7 +448,7 @@ void cooling_calc(double nx1, double ny1, double field1)
     double length = 32.5*n_period;
     double lturn = sqrt(length*length+lrad*lrad);       // Average length of one turn of each helix
     lturn+=4.5+2.*7.+pi*rad;                            // end regions
-    double lcond = nx*lturn+100;                        // We obtain the total coil length, multiplying by the number of turns. 2 helices
+    double lcond = 2*nx*lturn+100;                        // We obtain the total coil length, multiplying by the number of turns. 2 helices
                                                         // +100 cm is for connecting to power supply
     lcond_total+=2.*(nx*lturn+100);
 
@@ -464,8 +464,8 @@ void cooling_calc(double nx1, double ny1, double field1)
     double single_cur = pscurr;
     cur_single = single_cur;
     double lcirc = 0.01*lcond;                          // Length per water circuit in meters
-    total_power+=2.*powcoil;
-    total_volts+=2.*psvolts;
+    total_power+=powcoil;
+    total_volts+=psvolts;
 //    cout<<"                          0:    pscur="<<pscurr<<"     res="<<rescoil<<"     dhole="<<dhole<<"     dCOND="<<dcond<<"     A_COND="<<acond<<"     res="<<rescoil<<endl;
 //    cout<<"                          1: "<<total_power<<"    "<<total_volts<<endl;
 //    cout<<"                          2: "<<2.*powcoil<<"    "<<2.*psvolts<<endl;
@@ -558,8 +558,8 @@ void cooling_calc(double nx1, double ny1, double field1)
     voltage_per_wire[i_layer] = psvolts;
     resist_per_wire[i_layer] = rescoil;
     lcond_per_wire[i_layer] = lcond/100.;
-    voltage_drop += 2.*psvolts;
-    tot_resist += 2.*rescoil;
+    voltage_drop += psvolts;
+    tot_resist += rescoil;
   }
   cout<<"total power = "<<total_power<<"   total volts = "<<total_volts<<endl;
   cool_res<<"total power = "<<total_power<<"   total volts = "<<total_volts<<endl;
