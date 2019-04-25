@@ -4,6 +4,7 @@ void plot_all();
 int get_n_central();
 vector<int> get_n_first(TH2D *);
 
+bool plot_individual=false;
 double cool_pres, tot_power, cden_final, cur_single,lcond_total, steel_mass, voltage_drop, tot_resist;
 double nx_old[20], field_old[20], ny_old[12];
 double inch = 2.54;
@@ -24,7 +25,7 @@ int n_per_width=11;
 int n_per_height=8;
 int ny_central=3;
 
-int i_set=5;
+int i_set=1;
 int sett[10]={1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 string name[10]={"1to4_0.152", "1to4_0.12", "5to16_0.215", "5to16_0.183", "3to8_0.277", "3to8_0.245", "1to2_0.402", "1to2_0.37", "3to8_0.18", "1to2_0.24"};
 double dcond_set[10] = {1./4., 1./4., 5./16., 5./16., 3./8., 3./8., 1./2., 1./2., 3./8., 1./2.};
@@ -43,7 +44,7 @@ int n_per_height_new=10;
 double cond_height_single_new = dcond_new+insul_y;
 double cond_width_single_new = dcond_new+insul_x;
 bool larger_cond=false;
-int  larger_N=2;
+int  larger_N=0;
 double larger_diam=dcond_set[i_set+2]*inch;
 double larger_hole=dhole_set[i_set+2]*inch;
 double delta_dcond=dhole_set[i_set+2]-dhole_set[i_set];
@@ -247,10 +248,10 @@ void plot_all()
   int i=0;
   int j=3;
 
-//  for (j =0; j<n_per_height; j++)
-//  for (i =0; i<n_per_width; i++)
-  for (j =4; j<5; j++)
-  for (i =1; i<2; i++)
+  for (j =0; j<n_per_height; j++)
+  for (i =0; i<n_per_width; i++)
+//  for (j =4; j<5; j++)
+//  for (i =1; i<2; i++)
   {
     lcond_total=0;
     voltage_drop=0;
@@ -444,8 +445,10 @@ void cooling_calc(double nx1, double ny1, double field1)
   double nx = nx1;                                      //Number of turns in width
   double ny = ny1;                                      //Number of turns in height
   double n_period=14.;                                 //number of undulator periods
-  double tot_width=nx*dcond;                           //total width of helix conductor
-  double tot_height=ny*dcond;                          //total width of helix conductor
+  double tot_width=nx*cond_width_single;               //total width of helix conductor
+  double tot_height=ny*cond_height_single;             //total height of helix conductor
+//  tot_width=nx*dcond;                                  //total width of helix conductor
+//  tot_height=ny*dcond;                                 //total height of helix conductor
   double field=field1;
 
 
@@ -496,7 +499,7 @@ void cooling_calc(double nx1, double ny1, double field1)
       acond = pi*(dcond*dcond)/4.-ahole;           // conductor area
       rad+=(larger_N+1-(int_ny-i_layer))*delta_dcond-0.5*delta_dcond;
     }
-    cout<<i_layer<<"    "<<rad<<"    "<<dcond/inch<<"    "<<larger_diam<<endl;
+//    cout<<i_layer<<"    "<<rad<<"    "<<dcond/inch<<"    "<<larger_diam<<endl;
     double lrad = 2.*pi*rad*n_period;
     double length = 32.5*n_period;
     double lturn = sqrt(length*length+lrad*lrad);       // Average length of one turn of each helix
@@ -620,7 +623,7 @@ void cooling_calc(double nx1, double ny1, double field1)
   cool_res<<endl<<endl;
   cool_res.close();
   tot_power = total_power;
-//  if(0)
+  if(plot_individual)
   {
     TGraph * gr = new TGraph( n_l, n_layer, pres);
     TGraph * gr_res_wire = new TGraph( n_l, n_layer, resist_per_wire);
