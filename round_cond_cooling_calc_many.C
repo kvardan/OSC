@@ -42,6 +42,11 @@ int n_per_width_new=n_per_width_set[i_set];
 int n_per_height_new=10;
 double cond_height_single_new = dcond_new+insul_y;
 double cond_width_single_new = dcond_new+insul_x;
+bool larger_cond=false;
+int  larger_N=2;
+double larger_diam=dcond_set[i_set+2]*inch;
+double larger_hole=dhole_set[i_set+2]*inch;
+double delta_dcond=dhole_set[i_set+2]-dhole_set[i_set];
 
 void round_cond_cooling_calc_many()
 {
@@ -210,6 +215,7 @@ void plot_all()
   TH2D * hh_steel  = new TH2D ("steel", "Steel weight vs conductor geometry", 15, 0.5, 15.5, 14, 0.5, 14.5);
   TH2D * hh_voltage= new TH2D ("volts", "Total voltage vs conductor geometry", 15, 0.5, 15.5, 14, 0.5, 14.5);
   TH2D * hh_resist = new TH2D ("resist", "Total resistance vs conductor geometry", 15, 0.5, 15.5, 14, 0.5, 14.5);
+  TH2D * hh_NI     = new TH2D ("NI", "N #times I vs conductor geometry", 15, 0.5, 15.5, 14, 0.5, 14.5);
 
   hh_pres->GetXaxis()->SetTitle("Nr of conductors per width");
   hh_pres->GetYaxis()->SetTitle("Nr of conductors per height (radial)");
@@ -232,16 +238,19 @@ void plot_all()
   hh_voltage->GetXaxis()->SetTitle("Nr of conductors per width");
   hh_voltage->GetYaxis()->SetTitle("Nr of conductors per height (radial)");
 
+  hh_NI->GetXaxis()->SetTitle("Nr of conductors per width");
+  hh_NI->GetYaxis()->SetTitle("Nr of conductors per height (radial)");
+
 
   double pow_gr[20];
   double pres_gr[20];
   int i=0;
   int j=3;
 
-  for (j =0; j<n_per_height; j++)
-  for (i =0; i<n_per_width; i++)
-//  for (j =4; j<5; j++)
-//  for (i =1; i<2; i++)
+//  for (j =0; j<n_per_height; j++)
+//  for (i =0; i<n_per_width; i++)
+  for (j =4; j<5; j++)
+  for (i =1; i<2; i++)
   {
     lcond_total=0;
     voltage_drop=0;
@@ -251,6 +260,7 @@ void plot_all()
     cooling_calc(nx_old[i], ny_old[j], field_old[i]*ny_old[j]/ny_old[ny_central]);
     pow_gr[i]=tot_power/1000.;
     pres_gr[i]=cool_pres;
+    cool_pres=0;
     hh_pow    ->Fill(nx_old[i], ny_old[j], double(int(pow_gr[i]*10))/10.);
     hh_pres   ->Fill(nx_old[i], ny_old[j], double(int(pres_gr[i]*100))/100.);
     hh_cden   ->Fill(nx_old[i], ny_old[j], double(int(cden_final*1))/1.);
@@ -259,6 +269,7 @@ void plot_all()
     hh_steel  ->Fill(nx_old[i], ny_old[j], double(int(steel_mass/1000.*1))/1.);
     hh_voltage->Fill(nx_old[i], ny_old[j], double(int(voltage_drop*1))/1.);
     hh_resist ->Fill(nx_old[i], ny_old[j], double(int(tot_resist*100))/100.);
+    hh_NI     ->Fill(nx_old[i], ny_old[j], double(int(nx_old[i]*ny_old[j]*cur_single*1))/1.);
   }
 
 
@@ -406,6 +417,14 @@ void plot_all()
   c_resist->SaveAs(Form("autosave_resistance_set_%d_%s.gif", sett[i_set], name[i_set].c_str()));
   c_resist->SaveAs(Form("gif/R/autosave_set_%d_%s_resistance_total.gif", sett[i_set], name[i_set].c_str()));
 
+  TCanvas *c_NI = new TCanvas("NI", "NI", 700, 400, 1290, 850);
+  c_NI->cd();
+  c_NI->SetGridx();
+  c_NI->SetGridy();
+  hh_NI->Draw("colztext");
+  c_NI->SaveAs(Form("autosave_NI_set_%d_%s.gif", sett[i_set], name[i_set].c_str()));
+  c_NI->SaveAs(Form("gif/NI/autosave_set_%d_%s_NI_total.gif", sett[i_set], name[i_set].c_str()));
+
 }
 
 void cooling_calc(double nx1, double ny1, double field1)
@@ -438,7 +457,7 @@ void cooling_calc(double nx1, double ny1, double field1)
 
 
 
-  double portion = 1.5/field;                         //field scale
+  double portion = 1.5/field;                           //field scale
 //  portion = 1.;                                       //field scale
   double op3_cur_den=300;
   double current=op3_cur_den*tot_width*tot_height*portion;  //total current per helix
@@ -465,9 +484,19 @@ void cooling_calc(double nx1, double ny1, double field1)
 
 
 
-  for (int i_layer=0; i_layer < int(ny+0.1); i_layer++)
+  int int_ny=int(ny+0.1);
+  for (int i_layer=0; i_layer < int_ny; i_layer++)
   {
-    double rad = 4.5+0.5*dcond+double(i_layer)*dcond;
+    double rad = 4.5+0.5*cond_height_single+double(i_layer)*cond_height_single;
+    if ((int_ny-i_layer)<=larger_N)
+    {
+      dcond = larger_diam;
+      dhole = larger_hole;
+      ahole = pi*(dhole*dhole)/4.;                 // conductor corner radius
+      acond = pi*(dcond*dcond)/4.-ahole;           // conductor area
+      rad+=(larger_N+1-(int_ny-i_layer))*delta_dcond-0.5*delta_dcond;
+    }
+    cout<<i_layer<<"    "<<rad<<"    "<<dcond/inch<<"    "<<larger_diam<<endl;
     double lrad = 2.*pi*rad*n_period;
     double length = 32.5*n_period;
     double lturn = sqrt(length*length+lrad*lrad);       // Average length of one turn of each helix
@@ -578,7 +607,8 @@ void cooling_calc(double nx1, double ny1, double field1)
     n_layer[i_layer]=double(i_layer)+1;
     n_l++;
     pres[i_layer]=delp/1.e5;
-    cool_pres=pres[i_layer];
+    if (pres[i_layer]>cool_pres)
+      cool_pres=pres[i_layer];
     voltage_per_wire[i_layer] = psvolts;
     resist_per_wire[i_layer] = rescoil;
     lcond_per_wire[i_layer] = lcond/100.;
@@ -590,7 +620,7 @@ void cooling_calc(double nx1, double ny1, double field1)
   cool_res<<endl<<endl;
   cool_res.close();
   tot_power = total_power;
-  if(0)
+//  if(0)
   {
     TGraph * gr = new TGraph( n_l, n_layer, pres);
     TGraph * gr_res_wire = new TGraph( n_l, n_layer, resist_per_wire);
@@ -642,7 +672,6 @@ void cooling_calc(double nx1, double ny1, double field1)
     c_lcond_wire->SetGridy();
     c_lcond_wire->SetGridx();
     gr_lcond_wire->Draw("AP");
-
   }
 
   // End of cooling calculation
