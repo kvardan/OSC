@@ -2,6 +2,7 @@
 void cooling_calc(double , double, double );
 void plot_all();
 int get_n_central();
+vector<int> get_n_first(TH2D *);
 
 double cool_pres, tot_power, cden_final, cur_single,lcond_total, steel_mass, voltage_drop, tot_resist;
 double nx_old[20], field_old[20], ny_old[12];
@@ -23,7 +24,7 @@ int n_per_width=11;
 int n_per_height=8;
 int ny_central=3;
 
-int i_set=9;
+int i_set=5;
 int sett[10]={1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 string name[10]={"1to4_0.152", "1to4_0.12", "5to16_0.215", "5to16_0.183", "3to8_0.277", "3to8_0.245", "1to2_0.402", "1to2_0.37", "3to8_0.18", "1to2_0.24"};
 double dcond_set[10] = {1./4., 1./4., 5./16., 5./16., 3./8., 3./8., 1./2., 1./2., 3./8., 1./2.};
@@ -285,14 +286,37 @@ void plot_all()
     hh_cden->Fill(nx_old[i], ny_old[j], cden_final);
   }
 */
+/*
+  vector<int> range=get_n_first(hh_cur);
+  cout<<range[0]<<"     "<<range[1]<<"     "<<range[2]<<"     "<<range[3]<<endl;
+  hh_cur->GetXaxis()->SetRange(range[0], range[1]);
+  hh_pres->GetXaxis()->SetRange(range[0], range[1]);
+  hh_pow->GetXaxis()->SetRange(range[0], range[1]);
+  hh_cden->GetXaxis()->SetRange(range[0], range[1]);
+  hh_cur->GetXaxis()->SetRange(range[0], range[1]);
+  hh_lcond->GetXaxis()->SetRange(range[0], range[1]);
+  hh_steel->GetXaxis()->SetRange(range[0], range[1]);
+  hh_voltage->GetXaxis()->SetRange(range[0], range[1]);
+  hh_resist->GetXaxis()->SetRange(range[0], range[1]);
 
+  hh_cur ->GetYaxis()->SetRange(range[2], range[3]);
+  hh_pres->GetYaxis()->SetRange(range[2], range[3]);
+  hh_pow ->GetYaxis()->SetRange(range[2], range[3]);
+  hh_cden->GetYaxis()->SetRange(range[2], range[3]);
+  hh_cur ->GetYaxis()->SetRange(range[2], range[3]);
+  hh_lcond->GetYaxis()->SetRange(range[2], range[3]);
+  hh_steel->GetYaxis()->SetRange(range[2], range[3]);
+  hh_voltage->GetYaxis()->SetRange(range[2], range[3]);
+  hh_resist->GetYaxis()->SetRange(range[2], range[3]);
+//  hh_resist->SetTextSize(0.05);
+*/
   TGraph * gr_pow = new TGraph(n_per_width, nx_old, pow_gr);
   TGraph * gr_pres = new TGraph(n_per_width, nx_old, pres_gr);
   gr_pow->SetMinimum(0);
   gr_pow->SetMaximum(20);
 //tmp  gr_pres->SetMinimum(0);
 
-
+/*
   TCanvas *c_pow = new TCanvas("power", "power", 0, 0, 1000, 700);
   c_pow->cd();
   c_pow->SetGridx();
@@ -307,7 +331,7 @@ void plot_all()
   c_pres->SetGridy();
   gr_pres->Draw("AP*");
   c_pres->SaveAs(Form("autosave_set_%d_%s_test_pres.gif", sett[i_set], name[i_set].c_str()));
-
+*/
   gStyle->SetPalette(1);
   gStyle->SetOptStat(0);
   hh_voltage->SetMinimum(0);
@@ -640,4 +664,58 @@ int get_n_central()
     }
   }
   return i_central;
+}
+
+vector<int> get_n_first(TH2D *hhh)
+{
+  vector<int> range;
+
+  for (int i=1; i<=15; i++)
+  {
+    TH1D *hx = hhh->ProjectionY("proj",i, i);
+    cout<<"bin1:"<<i<<"    "<<hx->Integral()<<endl;
+    if (hx->Integral()>0.0005)
+    {
+      range.push_back(i);
+      break;
+    }
+  }
+
+  for (int i=range[0]; i<=15; i++)
+  {
+    TH1D *hx = hhh->ProjectionY("proj",i, i);
+    cout<<"bin2:"<<i<<"    "<<hx->Integral()<<endl;
+    if (hx->Integral()<0.0005)
+    {
+      range.push_back(i-1);
+      break;
+    }
+    if (i==15) range.push_back(i);
+  }
+
+  for (int i=1; i<=14; i++)
+  {
+    TH1D *hx = hhh->ProjectionX("proj",i, i);
+    cout<<"bin3:"<<i<<"    "<<hx->Integral()<<endl;
+    if (hx->Integral()>0.0005)
+    {
+      range.push_back(i);
+      break;
+    }
+  }
+
+  for (int i=range[2]; i<=14; i++)
+  {
+    TH1D *hx = hhh->ProjectionX("proj",i, i);
+    cout<<"bin4:"<<i<<"    "<<hx->Integral()<<endl;
+    if (hx->Integral()<0.0005)
+    {
+      range.push_back(i-1);
+      break;
+    }
+    if (i==14) range.push_back(i);
+  }
+
+  return range;
+
 }
