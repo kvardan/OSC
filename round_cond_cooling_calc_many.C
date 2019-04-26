@@ -25,7 +25,7 @@ int n_per_width=11;
 int n_per_height=8;
 int ny_central=3;
 
-int i_set=1;
+int i_set=7;
 int sett[10]={1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 string name[10]={"1to4_0.152", "1to4_0.12", "5to16_0.215", "5to16_0.183", "3to8_0.277", "3to8_0.245", "1to2_0.402", "1to2_0.37", "3to8_0.18", "1to2_0.24"};
 double dcond_set[10] = {1./4., 1./4., 5./16., 5./16., 3./8., 3./8., 1./2., 1./2., 3./8., 1./2.};
@@ -506,7 +506,7 @@ void cooling_calc(double nx1, double ny1, double field1)
     lturn+=4.5+2.*7.+pi*rad;                            // end regions
     double lcond = 2*nx*lturn+100;                        // We obtain the total coil length, multiplying by the number of turns. 2 helices
                                                         // +100 cm is for connecting to power supply
-    lcond_total+=2.*(nx*lturn+100);
+    lcond_total+=2.*nx*lturn+100;
 
 
 
