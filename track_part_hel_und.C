@@ -3,25 +3,54 @@
 #include "track_part_hel_und.h"
 
 using namespace std;
-double pi=acos(-1.);
+
 
 void track_part_hel_und()
 {
-  nx=101; //field map divisions in x direction
-  ny=101; //field map divisions in y direction
-  nz=4001; //field map divisions in z direction
-  z_field_start=-200.;
-  double  x_max=5.,   y_max=5.,   z_min=z_field_start, z_max=360;  // maximum allowed coordinates
+  pi=acos(-1.);
+  nx=101; //field map divisions in x direction, needed for definitions of arrays
+  ny=101; //field map divisions in y direction, needed for definitions of arrays
+  nz=4001; //field map divisions in z direction, needed for definitions of arrays
+  x_field_start=-5.;    // the lower edge of the field map. The field can start at any place after this edge (x_field>x_field_start)
+  y_field_start=-5.;    // the lower edge of the field map. The field can start at any place after this edge (y_field>y_field_start)
+  z_field_start=-200.;  // the lower edge of the field map. The field can start at any place after this edge (z_field>z_field_start)
+  dx_field=0.1;      // field map step size in mm-s
+  dy_field=0.1;      // field map step size in mm-s
+  dz_field=0.2;    // field map step size in mm-s
+  double  x_max=5.,   y_max=5.,   z_min=z_field_start, z_max=580;  // maximum allowed coordinates
   double  x_init=0.0, y_init=0.,  z_init=-100;  // starting coordinates
   double  px_init=0., py_init=0., pz_init=1.;  // momentum is in GeV units
 //  double pi=acos(-1.);
 
   prepare_arrays(nx, ny, nz);  // this will prepare arrays with dimensions nx, ny and nz in agreement with the field map
   prepare_for_plots();
-  k_scale=1.0;
+//  k_scale=0.847;
+//  k_scale=221./228.;
+  k_scale=1.;
 
-  i_und=8183;
-  int op3_cur=339;
+  i_und=85501;
+  int op3_cur=228;
+
+
+
+
+  if (i_und==8203)
+  {
+//    x_init=-1.*z_init*(-0.4354+0.0089301680)/130.-0.01+0.0257018;
+//    y_init=-0.0453053;
+//    y_init=0.15;
+//    px_init=0.03e-3;
+//    py_init=-0.06e-3;
+//    pz_init=sqrt(1-px_init*px_init-py_init*py_init);
+//  rotation_angle=19.4*TMath::Pi()/32.;
+//  k_scale=1500./1328.;
+  }
+
+//  x_init=-0.025;
+//  y_init=-0.015;
+
+//  i_und=8300;
+//  int op3_cur=339;
 
 
   if (i_und==6)
@@ -37,9 +66,79 @@ void track_part_hel_und()
   }
 
 
-  if (i_und>=7000)
+  if (i_und==8207)
   {
 //    k_scale=339/401.;
+    x_init=-0.0276;
+    y_init=-0.0363;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+    k_scale=-0.11;
+    i_und=107;
+    op3_cur=795;
+    field_disp_z=-15;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+
+    k_scale=0.055;
+    i_und=107;
+    field_rot_angle=pi/2.;
+    op3_cur=795;
+    field_disp_z=14.*32.5+25;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+    k_scale=0.088;
+    i_und=107;
+    field_rot_angle=0.;
+    op3_cur=795;
+    field_disp_z=14.*32.5+15;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+  }
+  else if (i_und==85501)
+  {
+//    k_scale=339/401.;
+//    x_init=-0.0276;
+//    y_init=-0.0363;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+    k_scale=14.45;
+    i_und=107;
+    op3_cur=795;
+    field_disp_z=5;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+    k_scale=-14.5;
+    i_und=107;
+    op3_cur=795;
+    field_disp_z=14.*32.5+7;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+
+    k_scale=-0.215;
+    i_und=107;
+    field_rot_angle=pi/2.;
+    op3_cur=795;
+    field_disp_z=5;
+//    field_disp_z=14.*32.5+25;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+    k_scale=-0.135;
+    i_und=107;
+    field_rot_angle=pi/2.;
+    op3_cur=795;
+    field_disp_z=14.*32.5;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+/*
+    k_scale=0.088;
+    i_und=107;
+    field_rot_angle=0.;
+    op3_cur=795;
+    field_disp_z=14.*32.5+15;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+*/
+  }
+  else if (i_und>=10)
+  {
     read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
   }
 
@@ -159,6 +258,7 @@ void runge_kutta_prop(double x0, double y0, double z0, double px0, double py0, d
     px_gr[n_gr]=Px_new/((1.6021773E-6)/cl);
     py_gr[n_gr]=Py_new/((1.6021773E-6)/cl);
     pz_gr[n_gr]=Pz_new/((1.6021773E-6)/cl);
+    pt_gr[n_gr]=sqrt(px_gr[n_gr]*px_gr[n_gr]+py_gr[n_gr]*py_gr[n_gr]);
     n_gr++;
   }
 }
@@ -223,12 +323,15 @@ void read_field(string filename)
         double bx, by, bz;
         istringstream vars(line);
         vars>>x>>y>>z>>bx>>by>>bz;
-        int ix=int((x+5.0)/0.1+0.000000000001);  //+0.0001 is needed for the proper conversion double->int
-        int iy=int((y+5.0)/0.1+0.000000000001);
-        int iz=int((z-z_field_start)/0.2+0.000000000001);
+        if (z+field_disp_z>=z_field_start)
+          z=z+field_disp_z;
+        int ix=int((x-x_field_start)/dx_field+0.000000000001);  //+0.0001 is needed for the proper conversion double->int
+        int iy=int((y-y_field_start)/dy_field+0.000000000001);
+        int iz=int((z-z_field_start)/dz_field+0.000000000001);
         if ((x==0) && (y==0) && (z==0))
         if (1==2)
           cout<<setw(15)<<ix<<setw(15)<<iy<<setw(15)<<iz<<setw(15)<<x<<setw(15)<<y<<setw(15)<<z<<setw(15)<<bx<<setw(15)<<by<<setw(15)<<bz<<endl;
+
         x_arr[ix][iy][iz]=x;
         y_arr[ix][iy][iz]=y;
         z_arr[ix][iy][iz]=z;
@@ -263,9 +366,12 @@ void read_field(string filename)
 
         {
 */
-          bx_arr[ix][iy][iz]=k_scale*bx;
-          by_arr[ix][iy][iz]=k_scale*by;
-          bz_arr[ix][iy][iz]=k_scale*bz;
+          TVector3 B_rot(k_scale*bx, k_scale*by, k_scale*bz);
+          B_rot.RotateZ(field_rot_angle);
+
+          bx_arr[ix][iy][iz]+=B_rot[0];
+          by_arr[ix][iy][iz]+=B_rot[1];
+          bz_arr[ix][iy][iz]+=B_rot[2];
 //      }
       }
     }
@@ -292,9 +398,9 @@ void read_field_first_half(string filename, double z_max)
         double bx, by, bz;
         istringstream vars(line);
         vars>>x>>y>>z>>bx>>by>>bz;
-        int ix=int((x+5.0)/0.1+0.000000000001);  //+0.0001 is needed for the proper conversion double->int
-        int iy=int((y+5.0)/0.1+0.000000000001);
-        int iz=int((z-z_field_start)/0.2+0.000000000001);
+        int ix=int((x-x_field_start)/dx_field+0.000000000001);  //+0.0001 is needed for the proper conversion double->int
+        int iy=int((y-y_field_start)/dy_field+0.000000000001);
+        int iz=int((z-z_field_start)/dz_field+0.000000000001);
         if ((x==0) && (y==0) && (z==0))
         if (1==2)
           cout<<setw(15)<<ix<<setw(15)<<iy<<setw(15)<<iz<<setw(15)<<x<<setw(15)<<y<<setw(15)<<z<<setw(15)<<bx<<setw(15)<<by<<setw(15)<<bz<<endl;
@@ -332,9 +438,9 @@ void read_field_last_half(string filename, double z_min)
         istringstream vars(line);
         vars>>x>>y>>z>>bx>>by>>bz;
         z+=z_offset;
-        int ix=int((x+5.0)/0.1+0.000000000001);  //+0.0001 is needed for the proper conversion double->int
-        int iy=int((y+5.0)/0.1+0.000000000001);
-        int iz=int((z-z_field_start)/0.2+0.000000000001);
+        int ix=int((x-x_field_start)/dx_field+0.000000000001);  //+0.0001 is needed for the proper conversion double->int
+        int iy=int((y-y_field_start)/dy_field+0.000000000001);
+        int iz=int((z-z_field_start)/dz_field+0.000000000001);
         if ((x==0) && (y==0) && (z==0))
         if (1==2)
           cout<<setw(15)<<ix<<setw(15)<<iy<<setw(15)<<iz<<setw(15)<<x<<setw(15)<<y<<setw(15)<<z<<setw(15)<<bx<<setw(15)<<by<<setw(15)<<bz<<endl;
@@ -361,9 +467,9 @@ vector<double> get_bfield(double x_loc, double y_loc, double z_loc)
 {
   // linear interpolation between the "net" of the field
   vector<double> b;
-  int ix=int((x_loc+5.0)/0.1+0.000000000001);  //+0.1 is needed for the proper conversion double->int
-  int iy=int((y_loc+5.0)/0.1+0.000000000001);
-  int iz=int((z_loc-z_field_start)/0.2+0.000000000001);
+  int ix=int((x_loc-x_field_start)/dx_field+0.000000000001);  //+0.1 is needed for the proper conversion double->int
+  int iy=int((y_loc-y_field_start)/dy_field+0.000000000001);
+  int iz=int((z_loc-z_field_start)/dz_field+0.000000000001);
 
   if(1)
   {
@@ -446,6 +552,7 @@ void make_plots()
   TGraph *gr_px = new TGraph(n_gr, z_gr, px_gr);
   TGraph *gr_py = new TGraph(n_gr, z_gr, py_gr);
   TGraph *gr_pz = new TGraph(n_gr, z_gr, pz_gr);
+  TGraph *gr_pt = new TGraph(n_gr, z_gr, pt_gr);
 //  gr_xy->SetMarkerStyle(1);
   gr_y->SetMarkerStyle(7);
   gr_x->SetMarkerStyle(7);
@@ -456,6 +563,7 @@ void make_plots()
   gr_py->SetMarkerStyle(7);
   gr_px->SetMarkerStyle(7);
   gr_pz->SetMarkerStyle(7);
+  gr_pt->SetMarkerStyle(7);
   double d_phi=TMath::Pi()/32.;
 /*
   gr_x->SetTitle(Form("x vs z (rotation angle is %.1f/32#upoint#pi)", rotation_angle/d_phi));
@@ -493,6 +601,7 @@ void make_plots()
     gr_px->SetTitle(Form("px vs z"));
     gr_py->SetTitle(Form("py vs z"));
     gr_pz->SetTitle(Form("pz vs z"));
+    gr_pt->SetTitle(Form("pt vs z"));
   }
 
 
@@ -506,6 +615,7 @@ void make_plots()
   gr_px->GetXaxis()->SetTitle("z [mm]");
   gr_py->GetXaxis()->SetTitle("z [mm]");
   gr_pz->GetXaxis()->SetTitle("z [mm]");
+  gr_pt->GetXaxis()->SetTitle("z [mm]");
 
   gr_xy->GetYaxis()->SetTitle("y [mm]");
   gr_x->GetYaxis()->SetTitle("x [mm]");
@@ -517,6 +627,7 @@ void make_plots()
   gr_px->GetYaxis()->SetTitle("px [MeV]");
   gr_py->GetYaxis()->SetTitle("py [MeV]");
   gr_pz->GetYaxis()->SetTitle("pz [MeV]");
+  gr_pt->GetYaxis()->SetTitle("pt [MeV]");
 
   gr_xy->GetXaxis()->SetTitleSize(0.05);
   gr_x->GetXaxis()->SetTitleSize(0.05);
@@ -528,6 +639,7 @@ void make_plots()
   gr_px->GetXaxis()->SetTitleSize(0.05);
   gr_py->GetXaxis()->SetTitleSize(0.05);
   gr_pz->GetXaxis()->SetTitleSize(0.05);
+  gr_pt->GetXaxis()->SetTitleSize(0.05);
 
   gr_xy->GetXaxis()->SetLabelSize(0.05);
   gr_x->GetXaxis()->SetLabelSize(0.05);
@@ -539,6 +651,7 @@ void make_plots()
   gr_px->GetXaxis()->SetLabelSize(0.05);
   gr_py->GetXaxis()->SetLabelSize(0.05);
   gr_pz->GetXaxis()->SetLabelSize(0.05);
+  gr_pt->GetXaxis()->SetLabelSize(0.05);
 
   gr_xy->GetXaxis()->SetTitleOffset(0.97);
   gr_x->GetXaxis()->SetTitleOffset(0.97);
@@ -550,6 +663,7 @@ void make_plots()
   gr_px->GetXaxis()->SetTitleOffset(0.97);
   gr_py->GetXaxis()->SetTitleOffset(0.97);
   gr_pz->GetXaxis()->SetTitleOffset(0.97);
+  gr_pt->GetXaxis()->SetTitleOffset(0.97);
 
   gr_xy->GetYaxis()->SetTitleSize(0.05);
   gr_x->GetYaxis()->SetTitleSize(0.05);
@@ -561,6 +675,7 @@ void make_plots()
   gr_px->GetYaxis()->SetTitleSize(0.05);
   gr_py->GetYaxis()->SetTitleSize(0.05);
   gr_pz->GetYaxis()->SetTitleSize(0.05);
+  gr_pt->GetYaxis()->SetTitleSize(0.05);
 
   gr_xy->GetYaxis()->SetTitleOffset(0.998);
   gr_x->GetYaxis()->SetTitleOffset(0.998);
@@ -572,6 +687,7 @@ void make_plots()
   gr_px->GetYaxis()->SetTitleOffset(0.998);
   gr_py->GetYaxis()->SetTitleOffset(0.998);
   gr_pz->GetYaxis()->SetTitleOffset(0.998);
+  gr_pt->GetYaxis()->SetTitleOffset(0.998);
 
   gr_xy->GetYaxis()->SetLabelSize(0.05);
   gr_x->GetYaxis()->SetLabelSize(0.05);
@@ -583,12 +699,13 @@ void make_plots()
   gr_px->GetYaxis()->SetLabelSize(0.05);
   gr_py->GetYaxis()->SetLabelSize(0.05);
   gr_pz->GetYaxis()->SetLabelSize(0.05);
+  gr_pt->GetYaxis()->SetLabelSize(0.05);
 
 
 //  cout<<"600  "<< get_i_from_z(600.)<<endl;
 //  cout<<"925  "<< get_i_from_z(925.)<<endl;
-  int i1_tmp=get_i_from_z(650.-325.-100.);
-  int i2_tmp=get_i_from_z(975.-325.-100.);
+  int i1_tmp=get_i_from_z(650.+0.*325.-100.);
+  int i2_tmp=get_i_from_z(975.+0.*325.-100.);
   double k=1./325.;
 
 
@@ -637,12 +754,13 @@ void make_plots()
     TLatex *text1_angle = new TLatex(0., sum_x+0.2, Form("x' = %.6f mrad", dx/dz*1000.) );
     text1_angle->SetTextAlign(12);
     text1_angle->SetTextColor(4);
-    text1_angle->SetTextSize(0.06);
+    text1_angle->SetTextSize(0.07);
     text1_angle->Draw();
     ofstream outfile;
     outfile.open("res.txt", ios::out | ios::app );
     outfile<<i_und<<"    x'="<<dx/dz*1000.<<"    y'="<<dy/dz*1000.<<endl;
     outfile.close();
+    cout<<"radiation angle x'="<<dx/dz*1000.<<" mrad,   y'="<<dy/dz*1000.<<endl;
 /*
     TLatex *text1_offset = new TLatex(0., sum_x, Form("x_{cent} = %.8f mm", sum_x) );
     text1_offset->SetTextAlign(12);
@@ -667,7 +785,7 @@ void make_plots()
     TLatex *text2_angle = new TLatex(0., 0., Form("y' = %.6f mrad", dy/dz*1000.) );
     text2_angle->SetTextAlign(12);
     text2_angle->SetTextColor(4);
-    text2_angle->SetTextSize(0.06);
+    text2_angle->SetTextSize(0.07);
     text2_angle->Draw();
 
 /*
@@ -709,6 +827,7 @@ void make_plots()
 
   cc->cd(3+2*div_nx);
   gr_pz->Draw("AP");
+//  gr_pt->Draw("AP");
 
 //  cc->Print("results_RK.pdf");
 //  cc->SaveAs(Form("tmp_%.1f.gif", rotation_angle/d_phi));
