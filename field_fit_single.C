@@ -5,23 +5,13 @@ double func_cos(double, Double_t *);
 void do_Minuit();
 
 void read_field_data(string);
-void read_field_data_steel(string);
-void read_field_data_finite(string);
+void read_field_data_add(string);
 void draw_plots();
 TGraph * gr_x;
 TGraph * gr_y;
 TGraph * gr_z;
 TGraph * gr_abs;
 
-TGraph * gr_steel_x;
-TGraph * gr_steel_y;
-TGraph * gr_steel_z;
-TGraph * gr_steel_abs;
-
-TGraph * gr_finite_x;
-TGraph * gr_finite_y;
-TGraph * gr_finite_z;
-TGraph * gr_finite_abs;
 //double scale=10675.710891858/10863.6794850346;
 //double scale=1500./1483.;
 //double scale=1500./1497.45;
@@ -38,6 +28,22 @@ bool Bx_fit_is_good=0;
 bool use_minuit_fit=1;
 bool tight_cuts=1;
 bool loose_cuts=0;
+
+
+double x_arr[50000];
+double y_arr[50000];
+double z_arr[50000];
+double bx_arr[50000];
+double by_arr[50000];
+double bx_err[50000];
+double by_err[50000];
+double bz_arr[50000];
+double b_abs[50000];
+double z_field_start=-100;
+double dz_field=0.2;
+double field_rot_angle=0;
+double field_disp_z=0;
+
 
 //minuit stuff
 double bx_minuit[50000], by_minuit[50000], z_minuit[50000];
@@ -56,14 +62,37 @@ void field_fit_single()
     fit_range_min=2*2*16.25;
     fit_range_max=2*12*16.25;
   }
-/*
-  read_field_data("../v0_ideal/ideal.table");
-  read_field_data_finite("../v9_many/hundulator_07_m1_908_xyz.table");
-  read_field_data_steel("../v7_osc_geom_steel_cor_field/hundulator_07_908_xyz.table");
-*/
   n=1;
   read_field_data(  Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", n_und, current));
-//  read_field_data(  "field_extended.dat");
+
+  scale=14.45;
+  n_und=107;
+  current=795;
+  field_disp_z=15;
+  read_field_data_add(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", n_und, current));
+
+  scale=-14.5;
+  n_und=107;
+  current=795;
+  field_disp_z=14.*32.5+5;
+  read_field_data_add(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", n_und, current));
+
+
+
+  scale=-0.215;
+  n_und=107;
+  field_rot_angle=pi/2.;
+  current=795;
+  field_disp_z=15;
+  //    field_disp_z=14.*32.5+25;
+  read_field_data_add(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", n_und, current));
+
+  scale=-0.135;
+  n_und=107;
+  field_rot_angle=pi/2.;
+  current=795;
+  field_disp_z=14.*32.5+5;
+  read_field_data_add(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", n_und, current));
 
   if (use_minuit_fit) do_Minuit();
   draw_plots();
@@ -86,76 +115,10 @@ void draw_plots()
   gr_abs->SetLineWidth(4);
 
 
-  if (n==3)
-  {
-    gr_steel_x->SetLineWidth(2);
-    gr_steel_y->SetLineWidth(2);
-    gr_steel_z->SetLineWidth(2);
-    gr_steel_abs->SetLineWidth(2);
-  }
-
-  if (n>=2)
-  {
-    gr_finite_x->SetLineWidth(2);
-    gr_finite_y->SetLineWidth(2);
-    gr_finite_z->SetLineWidth(2);
-    gr_finite_abs->SetLineWidth(2);
-  }
-
-
-  if (n==3)
-  {
-    gr_steel_x->SetLineColor(2);
-    gr_steel_y->SetLineColor(2);
-    gr_steel_z->SetLineColor(2);
-    gr_steel_abs->SetLineColor(2);
-  }
-
-  if (n==2)
-  {
-    gr_finite_x->SetLineColor(4);
-    gr_finite_y->SetLineColor(4);
-    gr_finite_z->SetLineColor(4);
-    gr_finite_abs->SetLineColor(4);
-  }
-
-
   gr_x->SetMarkerSize(1.5);
   gr_y->SetMarkerSize(1.5);
   gr_z->SetMarkerSize(1.5);
   gr_abs->SetMarkerSize(1.5);
-
-  if (n==3)
-  {
-    gr_steel_x->SetMarkerStyle(7);
-    gr_steel_y->SetMarkerStyle(7);
-    gr_steel_z->SetMarkerStyle(7);
-    gr_steel_abs->SetMarkerStyle(7);
-  }
-
-  if (n>=2)
-  {
-    gr_finite_x->SetMarkerStyle(7);
-    gr_finite_y->SetMarkerStyle(7);
-    gr_finite_z->SetMarkerStyle(7);
-    gr_finite_abs->SetMarkerStyle(7);
-  }
-
-  if (n==3)
-  {
-    gr_steel_x->SetMarkerColor(2);
-    gr_steel_y->SetMarkerColor(2);
-    gr_steel_z->SetMarkerColor(2);
-    gr_steel_abs->SetMarkerColor(2);
-  }
-
-  if (n>=2)
-  {
-    gr_finite_x->SetMarkerColor(4);
-    gr_finite_y->SetMarkerColor(4);
-    gr_finite_z->SetMarkerColor(4);
-    gr_finite_abs->SetMarkerColor(4);
-  }
 
   gr_abs->SetTitle("#sqrt{B_{x}^{2}+B_{y}^{2}} vs. z");
   gr_x->SetTitle("B_{x} vs. z");
@@ -226,10 +189,6 @@ void draw_plots()
   funcz1->SetParLimits(0, -5, 2500);
   gr_abs->Fit(funcz1, "R");
   gr_abs->Draw("AP");
-  if (n==3)
-    gr_steel_abs->Draw("PSame");
-  if (n>=2)
-    gr_finite_abs->Draw("PSame");
   TLine *l4_1 = new TLine(0., 0, 0, 2000);
   TLine *l4_2 = new TLine(n_period*32.5, 0, n_period*32.5, 2000);
   l4_1->SetLineStyle(2);
@@ -288,23 +247,6 @@ void draw_plots()
   funcy1->SetParName(2, "#Delta#phi");
 
 
-  TF1 * funcx2 = new TF1("funcx2", "[0]*cos([1]*x-[2])", 40, 7000);
-  funcx2->SetParLimits(0, 1000, 10000);
-  funcx2->SetParLimits(1, 0.999*2.*pi*k, 1.001051*2.*pi*k);
-  funcx2->SetParLimits(2, -3.1416, 3.1416);
-
-  TF1 * funcy2 = new TF1("funcy2", "[0]*sin([1]*x-[2])", 40, 7000);
-  funcy2->SetParLimits(0, 1000, 10000);
-  funcy2->SetParLimits(1, 0.999*2.*pi*k, 1.001051*2.*pi*k);
-  funcy2->SetParLimits(2, -3.1416, 3.1416);
-
-  funcx2->SetParName(0, "Amplitude");
-  funcx2->SetParName(1, "k");
-  funcx2->SetParName(2, "#Delta#phi");
-  funcy2->SetParName(0, "Amplitude");
-  funcy2->SetParName(1, "k");
-  funcy2->SetParName(2, "#Delta#phi");
-
   ofstream outfile;
   outfile.open("amplitude.txt", ios::out | ios::app );
 
@@ -359,22 +301,8 @@ void draw_plots()
     }
   }
 
-  if (n==3)
-  if (n>=2)
-    gr_finite_x->Draw("LSame");
   TLegend *leg = new TLegend(0.6, 0.8, 0.99, 0.99);
   leg->AddEntry(gr_x, "Smaller peropd lengths at the ends", "l");
-  if (n>=2)
-    leg->AddEntry(gr_finite_x, "Increased radius at the ends", "l");
-  if (n==3)
-    leg->AddEntry(gr_steel_x, "Iron (inner) cone at the ends", "l");
-  if (n>=2)
-    leg->Draw();
-
-  if (n>=2)
-  if (n_und!=94)
-    gr_finite_x->Fit(funcx2, "R");
-
 
 
   TLine *l1_1 = new TLine(0., -2300, 0, 2300);
@@ -389,16 +317,8 @@ void draw_plots()
   c->cd(2);
 
   gr_y->Draw("AL");
-  if (n_und!=94)
-    gr_y->Fit(funcy1, "R");
+  gr_y->Fit(funcy1, "R");
   outfile<<n_und<<"     Ay="<<funcy1->GetParameter(0)<<endl;
-  if (n==3)
-    gr_steel_y->Draw("LSame");
-  if (n>=2)
-    gr_finite_y->Draw("LSame");
-  if (n>=2)
-  if (n_und!=94)
-    gr_finite_y->Fit(funcy2, "R");
 
   TLine *l2_1 = new TLine(0., -2300, 0, 2300);
   TLine *l2_2 = new TLine(n_period*32.5, -2300, n_period*32.5, 2300);
@@ -412,13 +332,7 @@ void draw_plots()
 
   c->cd(3);
   gr_z->Draw("AL");
-  if (n==3)
-    gr_steel_z->Draw("LSame");
-  if (n>=2)
-    gr_finite_z->Draw("LSame");
   TLine *l3_1 = new TLine(0., -10, 0, 10);
-  if (n_und==93)
-    l3_1 = new TLine(0., -300, 0, 300);
   gr_z->Fit(funcz1, "R");
 
   TLine *l3_2 = new TLine(n_period*32.5, -10, n_period*32.5, 10);
@@ -446,19 +360,11 @@ void draw_plots()
 
 void read_field_data(string fname)
 {
+  clog<<" --> Loading B-field. File:"<<fname<<"   field scale:"<<scale<<endl;
   TH1D *hbz_1D = new TH1D("HBz 1d", "HBz 1d", 80, -16, 16);
   TH1D *hbx_1D = new TH1D("HBx 1d", "HBx 1d", 16000, -16, 16);
 //  TH1D *hby_1D = new TH1D("HBy 1d", "HBy 1d", 16000, -16, 16);
   TH2D *hbz_2D = new TH2D("HBz 2d", "HBz 2d", 40, -8, 8, 40, -8, 8);
-  double x_arr[50000];
-  double y_arr[50000];
-  double z_arr[50000];
-  double bx_arr[50000];
-  double by_arr[50000];
-  double bx_err[50000];
-  double by_err[50000];
-  double bz_arr[50000];
-  double b_abs[50000];
 
   string line;
   int nn=0;
@@ -475,7 +381,9 @@ void read_field_data(string fname)
         {
           double x, y, z, bx, by, bz;
           vars >> x >> y >>z >> bx >> by >> bz;
-          z=z-1.5;
+
+          int iz=int((z-z_field_start)/dz_field+0.000000000001);
+
           if (z==0)
           {
 //            if (fabs(x) < 1.0) cout<<line<<endl;
@@ -494,6 +402,7 @@ void read_field_data(string fname)
 
           if ( (x==0) && (y==0) )
           {
+            nn=iz;
             x_arr[nn]=x;
             y_arr[nn]=y;
 //            z_arr[nn]=z-32.4/4.;
@@ -508,7 +417,7 @@ void read_field_data(string fname)
             z_minuit[nn]=z_arr[nn];
             b_abs[nn]=scale*sqrt(bx*bx+by*by);
             nn++;
-            nz=nn;
+            nz=nn-2;
 //            cout<<line<<endl;
             hbx_1D->Fill(z, bx);
           }
@@ -520,39 +429,34 @@ void read_field_data(string fname)
       }
     }
   }
-  cout<<nn<<endl;
-  gr_x = new TGraph (nn, z_arr, bx_arr);
-  gr_y = new TGraph (nn, z_arr, by_arr);
-  gr_z = new TGraph (nn, z_arr, bz_arr);
-  gr_abs = new TGraph (nn, z_arr, b_abs);
+  gr_x = new TGraph (nz, z_arr, bx_arr);
+  gr_y = new TGraph (nz, z_arr, by_arr);
+  gr_z = new TGraph (nz, z_arr, bz_arr);
+  gr_abs = new TGraph (nz, z_arr, b_abs);
 }
 
-void read_field_data_steel(string fname)
-{
-  double x_arr[50000];
-  double y_arr[50000];
-  double z_arr[50000];
-  double bx_arr[50000];
-  double by_arr[50000];
-  double bz_arr[50000];
-  double b_abs[50000];
 
+void read_field_data_add(string fname)
+{
+  //this function will reat the field map
   string line;
-  int nn=0;
-//  ifstream file_fort("../v7_osc_geom_steel/hundulator_01_1101_xyz.table", ios::in);
-  ifstream file_fort(fname.c_str(), ios::in);
-  if ( file_fort.is_open() )
+  int nn;
+  ifstream myfile(fname.c_str(),ios::in);
+  if (myfile.is_open())
   {
-    while ( ! file_fort.eof() )
+    clog<<" --> Loading B-field. File:"<<fname<<"   field scale:"<<scale<<endl;
+    while (! myfile.eof() )
     {
-      getline(file_fort,line);
-      if(line.size()>50)
+      getline(myfile,line);
+      if (line.size() > 90)
       {
-//        cout<<line<<endl;
         istringstream vars(line);
         {
           double x, y, z, bx, by, bz;
           vars >> x >> y >>z >> bx >> by >> bz;
+          if (z+field_disp_z>=z_field_start)
+            z=z+field_disp_z;
+          int iz=int((z-z_field_start)/dz_field+0.000000000001);
           if (z==0)
           {
 //            if (fabs(x) < 1.0) cout<<line<<endl;
@@ -565,85 +469,35 @@ void read_field_data_steel(string fname)
           }
           if ( (x==0.) && (y==0.) )
           {
-            x_arr[nn]=x;
-            y_arr[nn]=y;
-            z_arr[nn]=z;
-            bx_arr[nn]=bx;
-            by_arr[nn]=by;
-            bz_arr[nn]=bz;
-            b_abs[nn]=sqrt(bx*bx+by*by);
-            nn++;
-//            cout<<line<<endl;
+            nn=iz;
+//            cout<<x<<"                  "<<y<<"               "<<z<<"                "<<bx_arr[nn]<<"                  "<<by_arr[nn]<<"               "<<bz_arr[nn]<<endl;
+//            x_arr[nn]=x;
+//            y_arr[nn]=y;
+//            z_arr[nn]=z;
+            TVector3 B_rot(scale*bx, scale*by, scale*bz);
+            B_rot.RotateZ(field_rot_angle);
+
+            bx_arr[nn]+=B_rot[0];
+            by_arr[nn]+=B_rot[1];
+            bz_arr[nn]+=B_rot[2];
+            bx_minuit[nn]=bx_arr[nn];
+            by_minuit[nn]=by_arr[nn];
+            b_abs[nn]=sqrt(bx_arr[nn]*bx_arr[nn]+by_arr[nn]*by_arr[nn]);
+//            cout<<x<<"                  "<<y<<"               "<<z<<"                "<<bx_arr[nn]<<"                  "<<by_arr[nn]<<"               "<<bz_arr[nn]<<endl<<endl;
+//            if (z==0) cout<<"added "<<B_rot[2]<<" Gauss,   total "<<bz_arr[nn]<<" Gs"<<endl;
           }
         }
       }
     }
+    clog<<" --> The field is ready to use"<<endl;
   }
-  cout<<nn<<endl;
-  gr_steel_x = new TGraph (nn, z_arr, bx_arr);
-  gr_steel_y = new TGraph (nn, z_arr, by_arr);
-  gr_steel_z = new TGraph (nn, z_arr, bz_arr);
-  gr_steel_abs = new TGraph (nn, z_arr, b_abs);
+  cout<<nz<<endl;
+  gr_x = new TGraph (nz, z_arr, bx_arr);
+  gr_y = new TGraph (nz, z_arr, by_arr);
+  gr_z = new TGraph (nz, z_arr, bz_arr);
+  gr_abs = new TGraph (nz, z_arr, b_abs);
 }
 
-void read_field_data_finite(string fname)
-{
-  double x_arr[50000];
-  double y_arr[50000];
-  double z_arr[50000];
-  double bx_arr[50000];
-  double by_arr[50000];
-  double bz_arr[50000];
-  double b_abs[50000];
-
-  string line;
-  int nn=0;
-//  ifstream file_fort("../v7_osc_geom_steel/hundulator_01_1101_xyz.table", ios::in);
-  ifstream file_fort(fname.c_str(), ios::in);
-  if ( file_fort.is_open() )
-  {
-    while ( ! file_fort.eof() )
-    {
-      getline(file_fort,line);
-      if(line.size()>50)
-      {
-//        cout<<line<<endl;
-        istringstream vars(line);
-        {
-          double x, y, z, bx, by, bz;
-          vars >> x >> y >>z >> bx >> by >> bz;
-          if (z==0)
-          {
-//            if (fabs(x) < 1.0) cout<<line<<endl;
-            double x0=-8.;
-            double x_bin=0.4;
-            double y0=-8.;
-            double y_bin=0.4;
-            int ix=int((x-x0)/x_bin)+1;
-            int iy=int((y-y0)/y_bin)+1;
-          }
-          if ( (x==0.) && (y==0.) )
-          {
-            x_arr[nn]=x;
-            y_arr[nn]=y;
-            z_arr[nn]=z;
-            bx_arr[nn]=bx;
-            by_arr[nn]=by;
-            bz_arr[nn]=bz;
-            b_abs[nn]=sqrt(bx*bx+by*by);
-            nn++;
-//            cout<<line<<endl;
-          }
-        }
-      }
-    }
-  }
-  cout<<nn<<endl;
-  gr_finite_x = new TGraph (nn, z_arr, bx_arr);
-  gr_finite_y = new TGraph (nn, z_arr, by_arr);
-  gr_finite_z = new TGraph (nn, z_arr, bz_arr);
-  gr_finite_abs = new TGraph (nn, z_arr, b_abs);
-}
 
 void fcn_minuit(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par, Int_t iflag)
 {
