@@ -5,7 +5,7 @@ double func_cos(double, Double_t *);
 void do_Minuit();
 
 void read_field_data(string);
-void read_field_data_add(string);
+void read_field_additional_data(string);
 void draw_plots();
 TGraph * gr_x;
 TGraph * gr_y;
@@ -19,9 +19,9 @@ double scale=1.;
 double pi=TMath::Pi();
 
 int n;
-int n_und=85331;
+int n_und=853842;
 int current=228;
-double n_period=14;
+double n_period=5;
 double fit_range_min=2*1.5*16.25;
 double fit_range_max=2*3.5*16.25;
 bool Bx_fit_is_good=0;
@@ -57,42 +57,64 @@ double fit_par_res[100], fit_par_res_Err[100];
 
 void field_fit_single()
 {
+    if (n_period>=6)
+    {
+      fit_range_min=2*2*16.25;
+      fit_range_max=2*(n_period-2)*16.25;
+    }
+    if (n_period<=6)
+    {
+      fit_range_min=2*1.5*16.25;
+      fit_range_max=2*(n_period-1.5)*16.25;
+    }
+
+    if (n_period<=3)
+    {
+      fit_range_min=2*1*16.25;
+      fit_range_max=2*(n_period-1)*16.25;
+    }
+
+    if (n_period<=2)
+    {
+      fit_range_min=2*(n_period/2-n_period/8)*16.25;
+      fit_range_max=2*(n_period/2+n_period/8)*16.25;
+//      fit_range_min=20;
+//      fit_range_max=23;
+    }
+
+//  n_und=85321; n_period=5; scale=1500/1499.51;
+//  n_und=85331; n_period=5; scale=1500/1499.51;
+//  n_und=8534; n_period=5;  scale=1500/1499.51;
+//  n_und=8535; n_period=5;  scale=1500/1499.51;
+//  n_und=85361; n_period=5; scale=1500/1497.92;
+//  n_und=85371; n_period=5; scale=1500/1497.92;
+//  n_und=85381; n_period=5; scale=1500/1497.92;
+//  n_und=85391; n_period=5; scale=1500/1497.92;
+//  n_und=8540; n_period=5; scale=1500/1497.92;
+//  n_und=8545; n_period=5; scale=1500/1497.92;
+//  n_und=85501; n_period=14; scale=1500/1482.66;
+//  n_und=8555; n_period=5; scale=1500/1482.66;
+//  n_und=8556; n_period=14; scale=1500/1482.66;
+//  n_und=8557; n_period=5; scale=1500/1482.66;
+//  n_und=8558; n_period=5; scale=1500/1482.66;
+//  scale=1500/1497.65;
   if (n_period==14)
   {
     fit_range_min=2*2*16.25;
     fit_range_max=2*12*16.25;
   }
   n=1;
-  read_field_data(  Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", n_und, current));
-
-  scale=14.45;
-  n_und=107;
-  current=795;
-  field_disp_z=15;
-  read_field_data_add(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", n_und, current));
-
-  scale=-14.5;
-  n_und=107;
-  current=795;
-  field_disp_z=14.*32.5+5;
-  read_field_data_add(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", n_und, current));
 
 
+  if (n_und==-1)
+  {
+    read_field_data("SRW_field.dat");
+  }
 
-  scale=-0.215;
-  n_und=107;
-  field_rot_angle=pi/2.;
-  current=795;
-  field_disp_z=15;
-  //    field_disp_z=14.*32.5+25;
-  read_field_data_add(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", n_und, current));
-
-  scale=-0.135;
-  n_und=107;
-  field_rot_angle=pi/2.;
-  current=795;
-  field_disp_z=14.*32.5+5;
-  read_field_data_add(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", n_und, current));
+  if (n_und>=10)
+  {
+    read_field_data(  Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", n_und, current));
+  }
 
   if (use_minuit_fit) do_Minuit();
   draw_plots();
@@ -400,7 +422,7 @@ void read_field_data(string fname)
           if ((x==y) && (z==0) && (fabs(x)<5./sqrt(2.)))
             hbz_1D->Fill(sqrt(2)*x, bz);
 
-          if ( (x==0) && (y==0) )
+          if ( (x==0.) && (y==0.) )
           {
             nn=iz;
             x_arr[nn]=x;
@@ -436,7 +458,7 @@ void read_field_data(string fname)
 }
 
 
-void read_field_data_add(string fname)
+void read_field_additional_data(string fname)
 {
   //this function will reat the field map
   string line;
