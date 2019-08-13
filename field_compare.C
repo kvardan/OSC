@@ -38,6 +38,7 @@ TGraph * gr_1_abs;
 int n;
 int i_und1;
 int i_und2;
+int i_und3;
 
 double x_0=0.0;
 double  y_0=0.0;
@@ -51,19 +52,22 @@ void field_compare()
   read_field_data_1("../v9_many/hundulator_07_m1_908_xyz.table");
   read_field_data_2("../v7_osc_geom_2_cor_field/hundulator_07_908_xyz.table");
 */
-  n=2;
+  n=3;
 //  read_field_data(  "../v9_4_many_xare/hundulator_602_393_xyz.table");
 //  read_field_data_1("../v9_4_many_xare/hundulator_702_393_xyz.table");
 //  read_field_data_2("../v9_4_many_xare/hundulator_803_393_xyz.table");
-  i_und1=85352;
-  i_und2=85342;
+  i_und1=853841;
+  i_und2=853842;
+  i_und3=8538415;
 //  read_field_data("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_82044771_228_xyz.table");
 //  read_field_data("field_extended.dat");
-  scale=1500./1485.2;
+//  scale=1500./1485.2;
+//  scale=1500./1482.66;
   read_field_data(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_228_xyz.table", i_und1));
 //  scale=1500./1497.45;
-  scale=1500./1489.7;
+//  scale=1492.02/1479.16;
   read_field_data_1(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_228_xyz.table", i_und2));
+  read_field_data_2(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_228_xyz.table", i_und3));
 //  read_field_data_2("../v9_4_many_xare/hundulator_66005_450_xyz.table");
 //  read_field_data_3("../v9_4_many_xare/hundulator_66007_450_xyz.table");
 //  read_field_data_3( "../v9_4_many_xare/hundulator_905_393_xyz.table");
@@ -351,7 +355,7 @@ void draw_plots()
   l4_1->Draw();
   l4_2->Draw();
   leg->Draw();
-  c->SaveAs(Form("field_compare_%d_%d_autosave.gif", i_und1, i_und2));
+  c->SaveAs(Form("gif/field_compare/field_compare_%d_%d_autosave.gif", i_und1, i_und2));
 
   TCanvas *c2 = new TCanvas("c2","c2",100, 0, 1600, 700);
   c2->Divide(2,2);
@@ -367,7 +371,7 @@ void draw_plots()
   c2->cd(4);
   gr_abs_diff->Draw("APC");
 
-  c2->SaveAs(Form("field_compare_%d_%d_difference.gif", i_und1, i_und2));
+  c2->SaveAs(Form("gif/field_compare/field_compare_%d_%d_difference.gif", i_und1, i_und2));
 }
 
 void read_field_data(string fname)

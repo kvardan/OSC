@@ -4,9 +4,9 @@ void plot_all();
 int get_n_central();
 vector<int> get_n_first(TH2D *);
 
-double ngroupping_per_layer=2;                       // 1 is for continuous winding per each layer
+double ngroupping_per_layer=1;                       // 1 is for continuous winding per each layer
 bool is_dec_design=false;                           // dec-apr design difference is the end region winding. Apr design assumes condinuous winding
-bool plot_individual=false;
+bool plot_individual=true;
 double cool_pres, tot_power, cden_final, cur_single,lcond_total, steel_mass, voltage_drop, tot_resist;
 double nx_old[20], field_old[20], ny_old[12];
 double inch = 2.54;
@@ -31,14 +31,14 @@ int n_per_height=8;
 int ny_central=3;
 double mass_total;
 
-int i_set=1;
+int i_set=5;
 int sett[10]={1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 string name[10]={"1to4_0.152", "1to4_0.12", "5to16_0.215", "5to16_0.183", "3to8_0.277", "3to8_0.245", "1to2_0.402", "1to2_0.37", "3to8_0.18", "1to2_0.24"};
 double dcond_set[10] = {1./4., 1./4., 5./16., 5./16., 3./8., 3./8., 1./2., 1./2., 3./8., 1./2.};
 double dhole_set[10] = {0.152,  0.12,  0.215,  0.183, 0.277, 0.245, 0.402,  0.37,  0.18,  0.24};
 int n_per_width_set[10]={  10,    10,      9,      9,     7,    7,      6,     6,     7,     6};
 double n_width_start_set[10]={  5,    5,     4,     4,     4,    4,      3,    3,     4,     3};
-double n_height_start_set[10]={ 6,    4,     6,     6,     5,    5,      4,    4,     5,     4};
+double n_height_start_set[10]={ 7,    7,     6,     6,     5,    5,      4,    4,     5,     4};
 
 //double dcond_new=5./16.*inch;
 //double dhole_new=0.215*inch;
@@ -254,10 +254,10 @@ void plot_all()
   int i=0;
   int j=3;
 
-  for (j =0; j<n_per_height; j++)
-  for (i =0; i<n_per_width; i++)
-//  for (j =3; j<4; j++)
-//  for (i =2; i<3; i++)
+//  for (j =0; j<n_per_height; j++)
+//  for (i =0; i<n_per_width; i++)
+  for (j =3; j<4; j++)
+  for (i =2; i<3; i++)
 //  for (j =0; j<1; j++)
 //  for (i =4; i<5; i++)
   {

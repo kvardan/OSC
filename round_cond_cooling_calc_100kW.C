@@ -4,17 +4,12 @@ void plot_all();
 int get_n_central();
 vector<int> get_n_first(TH2D *);
 
-double ngroupping_per_layer=2;                       // 1 is for continuous winding per each layer
-bool is_dec_design=false;                           // dec-apr design difference is the end region winding. Apr design assumes condinuous winding
-bool plot_individual=false;
+bool plot_individual=true;
 double cool_pres, tot_power, cden_final, cur_single,lcond_total, steel_mass, voltage_drop, tot_resist;
 double nx_old[20], field_old[20], ny_old[12];
 double inch = 2.54;
 double dcond = 0.25*inch;                           //conductor diameter
 double dhole = 0.12*inch;                           //conductor hole diameter
-double deltat = 35;
-double n_period=14.;                                //number of undulator periods
-double cond_length_at_ends_per_turn = 50;           //each turn conductor additional length at the ends
 
 double insul_y=0.03;
 double insul_x=0.021357;
@@ -27,18 +22,17 @@ double pitch=32.5;
 double alpha_dn=atan(2*pi*RC0/pitch);
 double frac_w_real=sin(alpha_dn);
 int n_per_width=11;
-int n_per_height=8;
+int n_per_height=10;
 int ny_central=3;
-double mass_total;
 
 int i_set=1;
 int sett[10]={1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 string name[10]={"1to4_0.152", "1to4_0.12", "5to16_0.215", "5to16_0.183", "3to8_0.277", "3to8_0.245", "1to2_0.402", "1to2_0.37", "3to8_0.18", "1to2_0.24"};
 double dcond_set[10] = {1./4., 1./4., 5./16., 5./16., 3./8., 3./8., 1./2., 1./2., 3./8., 1./2.};
 double dhole_set[10] = {0.152,  0.12,  0.215,  0.183, 0.277, 0.245, 0.402,  0.37,  0.18,  0.24};
-int n_per_width_set[10]={  10,    10,      9,      9,     7,    7,      6,     6,     7,     6};
+int n_per_width_set[10]={  11,    11,      9,      9,     7,    7,      6,     6,     7,     6};
 double n_width_start_set[10]={  5,    5,     4,     4,     4,    4,      3,    3,     4,     3};
-double n_height_start_set[10]={ 6,    4,     6,     6,     5,    5,      4,    4,     5,     4};
+double n_height_start_set[10]={ 7,    7,     6,     6,     5,    5,      4,    4,     5,     4};
 
 //double dcond_new=5./16.*inch;
 //double dhole_new=0.215*inch;
@@ -55,7 +49,7 @@ double larger_diam=dcond_set[i_set+2]*inch;
 double larger_hole=dhole_set[i_set+2]*inch;
 double delta_dcond=dhole_set[i_set+2]-dhole_set[i_set];
 
-void round_cond_cooling_calc_many()
+void round_cond_cooling_calc_100kW()
 {
   cout<<dcond_set[2]<<endl;
 
@@ -214,15 +208,15 @@ void round_cond_cooling_calc_many()
 
 void plot_all()
 {
-  TH2D * hh_pres = new TH2D ("Water pressure vs conductor geometry", "Water pressure vs conductor geometry", 15, 0.5, 15.5, 14, 0.5, 14.5);
-  TH2D * hh_pow  = new TH2D ("Total power vs conductor geometry",   "Total power vs conductor geometry", 15, 0.5, 15.5, 14, 0.5, 14.5);
-  TH2D * hh_cden = new TH2D ("Current density vs conductor geometry", "Current density vs conductor geometry", 15, 0.5, 15.5, 14, 0.5, 14.5);
-  TH2D * hh_cur  = new TH2D ("Current for single wire", "Current for single wire", 15, 0.5, 15.5, 14, 0.5, 14.5);
-  TH2D * hh_lcond  = new TH2D ("lcond", "Cond total length vs conductor geometry", 15, 0.5, 15.5, 14, 0.5, 14.5);
-  TH2D * hh_steel  = new TH2D ("steel", "Steel weight vs conductor geometry", 15, 0.5, 15.5, 14, 0.5, 14.5);
-  TH2D * hh_voltage= new TH2D ("volts", "Total voltage vs conductor geometry", 15, 0.5, 15.5, 14, 0.5, 14.5);
-  TH2D * hh_resist = new TH2D ("resist", "Total resistance vs conductor geometry", 15, 0.5, 15.5, 14, 0.5, 14.5);
-  TH2D * hh_NI     = new TH2D ("NI", "N #times I vs conductor geometry", 15, 0.5, 15.5, 14, 0.5, 14.5);
+  TH2D * hh_pres = new TH2D ("Water pressure vs conductor geometry", "Water pressure vs conductor geometry", 15, 0.5, 15.5, 16, 0.5, 16.5);
+  TH2D * hh_pow  = new TH2D ("Total power vs conductor geometry",   "Total power vs conductor geometry", 15, 0.5, 15.5, 16, 0.5, 16.5);
+  TH2D * hh_cden = new TH2D ("Current density vs conductor geometry", "Current density vs conductor geometry", 15, 0.5, 15.5, 16, 0.5, 16.5);
+  TH2D * hh_cur  = new TH2D ("Current for single wire", "Current for single wire", 15, 0.5, 15.5, 16, 0.5, 16.5);
+  TH2D * hh_lcond  = new TH2D ("lcond", "Cond total length [ft] vs conductor geometry", 15, 0.5, 15.5, 16, 0.5, 16.5);
+  TH2D * hh_steel  = new TH2D ("steel", "Steel weight vs conductor geometry", 15, 0.5, 15.5, 16, 0.5, 16.5);
+  TH2D * hh_voltage= new TH2D ("volts", "Total voltage vs conductor geometry", 15, 0.5, 15.5, 16, 0.5, 16.5);
+  TH2D * hh_resist = new TH2D ("resist", "Total resistance vs conductor geometry", 15, 0.5, 15.5, 16, 0.5, 16.5);
+  TH2D * hh_NI     = new TH2D ("NI", "N #times I vs conductor geometry", 15, 0.5, 15.5, 16, 0.5, 16.5);
 
   hh_pres->GetXaxis()->SetTitle("Nr of conductors per width");
   hh_pres->GetYaxis()->SetTitle("Nr of conductors per height (radial)");
@@ -254,17 +248,16 @@ void plot_all()
   int i=0;
   int j=3;
 
-  for (j =0; j<n_per_height; j++)
-  for (i =0; i<n_per_width; i++)
+//  for (j =0; j<n_per_height; j++)
+//  for (i =0; i<n_per_width; i++)
 //  for (j =3; j<4; j++)
 //  for (i =2; i<3; i++)
-//  for (j =0; j<1; j++)
-//  for (i =4; i<5; i++)
+  for (j =5; j<6; j++)
+  for (i =10; i<11; i++)
   {
     lcond_total=0;
     voltage_drop=0;
     tot_resist=0;
-    mass_total=0;
     steel_mass=(pitch-(cond_width_single/frac_w_real)*nx_old[i]*2.)/pitch*pi*((RC0+cond_height_single*ny_old[j])*(RC0+cond_height_single*ny_old[j])-RC0*RC0)*pitch*14.*7.850;
     cout<<i<<"       "<<j<<"    inside loop    nx="<<nx_old[i]<<"    ny="<<ny_old[j]<<"        ny_old[ny_central]="<<ny_old[ny_central]<<"     scaled field="<<field_old[i]*ny_old[j]/ny_old[ny_central]<<endl;
     cool_pres=0;
@@ -444,11 +437,12 @@ void cooling_calc(double nx1, double ny1, double field1)
 // b=5 in opera, means real width=3.28
   double nx = nx1;                                      //Number of turns in width
   double ny = ny1;                                      //Number of turns in height
+  double n_period=14.;                                 //number of undulator periods
   double tot_width=nx*cond_width_single;               //total width of helix conductor
   double tot_height=ny*cond_height_single;             //total height of helix conductor
 //  tot_width=nx*dcond;                                  //total width of helix conductor
 //  tot_height=ny*dcond;                                 //total height of helix conductor
-  double field=field1;
+  double field=field1/3.*236./216.;
 
 
 
@@ -458,6 +452,7 @@ void cooling_calc(double nx1, double ny1, double field1)
 //  portion = 1.;                                       //field scale
   double op3_cur_den=300;
   double current=op3_cur_den*tot_width*tot_height*portion;  //total current per helix
+  double deltat = 35;
 
   double ahole = pi*(dhole*dhole)/4.;                 // conductor corner radius
   double acond = pi*(dcond*dcond)/4.-ahole;           // conductor area
@@ -478,21 +473,9 @@ void cooling_calc(double nx1, double ny1, double field1)
   cool_res<<"N_layer   L_turn (cm)    l_cond(cm)     power(Wt)      Voltage(V)     reynolds       dP(Pascal)"<<endl;
   cden_final=op3_cur_den*portion;
 
+
+
   int int_ny=int(ny+0.1);
-
-  double lcond_per_layer[100];
-  for (int i_layer=0; i_layer < int_ny; i_layer++)
-  if (is_dec_design)
-  {
-    double rad = 4.5+0.5*cond_height_single+double(i_layer)*cond_height_single;
-    double lrad = 2.*pi*rad*n_period;
-    double length = 32.5*n_period;
-    double lturn = sqrt(length*length+lrad*lrad)+cond_length_at_ends_per_turn;       // length of one turn of each helix
-    lcond_per_layer[i_layer]=nx*lturn;
-    cout<<"-------------------------------------> i="<<i_layer<<"      rad="<<rad<<"       lturn="<<lturn<<"      l_layer="<<lcond_per_layer[i_layer]<<endl;
-  }
-
-
   for (int i_layer=0; i_layer < int_ny; i_layer++)
   {
     if (i_layer==0)
@@ -511,15 +494,16 @@ void cooling_calc(double nx1, double ny1, double field1)
       acond = pi*(dcond*dcond)/4.-ahole;           // conductor area
       rad+=(larger_N+1-(int_ny-i_layer))*delta_dcond-0.5*delta_dcond;
     }
-//    cout<<"------------------------------------->"<<i_layer<<"    "<<rad<<"    "<<dcond/inch<<"    "<<larger_diam<<endl;
+//    cout<<i_layer<<"    "<<rad<<"    "<<dcond/inch<<"    "<<larger_diam<<endl;
     double lrad = 2.*pi*rad*n_period;
     double length = 32.5*n_period;
     double lturn = sqrt(length*length+lrad*lrad);       // Average length of one turn of each helix
     lturn+=4.5+2.*7.+pi*rad;                            // end regions
-    double lcond = 2*nx*lturn/ngroupping_per_layer+100;  // We obtain the total coil length, multiplying by the number of turns. 2 helices
+    double lcond = 2*nx*lturn+100;                        // We obtain the total coil length, multiplying by the number of turns. 2 helices
                                                         // +100 cm is for connecting to power supply
-    if (is_dec_design) lcond = (lcond_per_layer[i_layer]+lcond_per_layer[int_ny-1-i_layer])/ngroupping_per_layer;
     lcond_total+=2.*nx*lturn+100;
+    lcond=3500;
+    lcond_total=3500;
 
 
 
@@ -533,8 +517,8 @@ void cooling_calc(double nx1, double ny1, double field1)
     double single_cur = pscurr;
     cur_single = single_cur;
     double lcirc = 0.01*lcond;                          // Length per water circuit in meters
-    total_power+=powcoil*ngroupping_per_layer;
-    total_volts+=psvolts*ngroupping_per_layer;
+    total_power+=powcoil;
+    total_volts+=psvolts;
 //    cout<<"                          0:    pscur="<<pscurr<<"     res="<<rescoil<<"     dhole="<<dhole<<"     dCOND="<<dcond<<"     A_COND="<<acond<<"     res="<<rescoil<<endl;
 //    cout<<"                          1: "<<total_power<<"    "<<total_volts<<endl;
 //    cout<<"                          2: "<<2.*powcoil<<"    "<<2.*psvolts<<endl;
@@ -567,8 +551,7 @@ void cooling_calc(double nx1, double ny1, double field1)
 
     // velocity in m/s
     double velocity = volflow/(ahole/1e4);
-    mass_total+=massflow;
-    cout<<"total mass="<<mass_total<<" l,       massflow="<<massflow<<" l,     velocity="<<velocity<<" m/v,      ahole="<<ahole<<" cm2"<<endl;
+    cout<<"massflow="<<massflow<<"   velocity="<<velocity<<"    ahole="<<ahole<<endl;
 
     //Next is the Reynolds number.
     //kinematicViscosity=1e-6
@@ -632,8 +615,8 @@ void cooling_calc(double nx1, double ny1, double field1)
     voltage_per_wire[i_layer] = psvolts;
     resist_per_wire[i_layer] = rescoil;
     lcond_per_wire[i_layer] = lcond/100.;
-    voltage_drop += psvolts*ngroupping_per_layer;
-    tot_resist += rescoil*ngroupping_per_layer;
+    voltage_drop += psvolts;
+    tot_resist += rescoil;
   }
   cout<<"total power = "<<total_power<<"   total volts = "<<total_volts<<endl;
   cool_res<<"total power = "<<total_power<<"   total volts = "<<total_volts<<endl;

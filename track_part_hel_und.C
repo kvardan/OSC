@@ -14,9 +14,11 @@ void track_part_hel_und()
   x_field_start=-5.;    // the lower edge of the field map. The field can start at any place after this edge (x_field>x_field_start)
   y_field_start=-5.;    // the lower edge of the field map. The field can start at any place after this edge (y_field>y_field_start)
   z_field_start=-200.;  // the lower edge of the field map. The field can start at any place after this edge (z_field>z_field_start)
-  dx_field=0.1;      // field map step size in mm-s
-  dy_field=0.1;      // field map step size in mm-s
-  dz_field=0.2;    // field map step size in mm-s
+  dx_field=0.1;         // field map step size in mm-s
+  dy_field=0.1;         // field map step size in mm-s
+  dz_field=0.2;         // field map step size in mm-s
+  field_disp_z=0.;      // displacement of the field to be read next
+  field_rot_angle=0.;   // rotation of the field to be read next
   double  x_max=5.,   y_max=5.,   z_min=z_field_start, z_max=580;  // maximum allowed coordinates
   double  x_init=0.0, y_init=0.,  z_init=-100;  // starting coordinates
   double  px_init=0., py_init=0., pz_init=1.;  // momentum is in GeV units
@@ -26,13 +28,17 @@ void track_part_hel_und()
   prepare_for_plots();
 //  k_scale=0.847;
 //  k_scale=221./228.;
+  n_period=14;
   k_scale=1.;
 
-  i_und=85501;
+  i_und=-1;
   int op3_cur=228;
+//  i_und=-1;
 
-
-
+  if (i_und==-1)
+  {
+    read_field("SRW_field.dat");
+  }
 
   if (i_und==8203)
   {
@@ -42,8 +48,8 @@ void track_part_hel_und()
 //    px_init=0.03e-3;
 //    py_init=-0.06e-3;
 //    pz_init=sqrt(1-px_init*px_init-py_init*py_init);
-//  rotation_angle=19.4*TMath::Pi()/32.;
-//  k_scale=1500./1328.;
+//    rotation_angle=19.4*TMath::Pi()/32.;
+//    k_scale=1500./1328.;
   }
 
 //  x_init=-0.025;
@@ -69,6 +75,8 @@ void track_part_hel_und()
   if (i_und==8207)
   {
 //    k_scale=339/401.;
+//    px_init=0.0276e-3;
+//    py_init=-0.0276;
     x_init=-0.0276;
     y_init=-0.0363;
     read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
@@ -100,42 +108,384 @@ void track_part_hel_und()
 //    y_init=-0.0363;
     read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
 
-    k_scale=14.45;
+    k_scale=14.452;
     i_und=107;
     op3_cur=795;
-    field_disp_z=5;
+    field_disp_z=15;
     read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
 
-    k_scale=-14.5;
+    k_scale=-14.42;
     i_und=107;
     op3_cur=795;
-    field_disp_z=14.*32.5+7;
+    field_disp_z=14.*32.5+5;
     read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
 
 
-    k_scale=-0.215;
-    i_und=107;
-    field_rot_angle=pi/2.;
-    op3_cur=795;
-    field_disp_z=5;
-//    field_disp_z=14.*32.5+25;
-    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
-
-    k_scale=-0.135;
+    k_scale=-0.20;
     i_und=107;
     field_rot_angle=pi/2.;
     op3_cur=795;
-    field_disp_z=14.*32.5;
+    field_disp_z=15;
     read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
 
+    k_scale=-0.155;
+    i_und=107;
+    field_rot_angle=pi/2.;
+    op3_cur=795;
+    field_disp_z=14.*32.5+5;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+  }
+  else if (i_und==8556)
+  {
+//    k_scale=339/401.;
+//    x_init=-0.0276;
+//    y_init=-0.0363;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+    k_scale=14.487;
+    i_und=107;
+    op3_cur=795;
+    field_disp_z=15;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+    k_scale=-14.435;
+    i_und=107;
+    op3_cur=795;
+    field_disp_z=14.*32.5+5;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+
+    k_scale=-0.095;
+    i_und=107;
+    field_rot_angle=pi/2.;
+    op3_cur=795;
+    field_disp_z=15;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+    k_scale=-0.005;
+    i_und=107;
+    field_rot_angle=pi/2.;
+    op3_cur=795;
+    field_disp_z=14.*32.5+5;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+  }
+  else if (i_und==8540)
+  {
+//    k_scale=339/401.;
+//    x_init=-0.0276;
+//    y_init=-0.0363;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+    k_scale=14.627;
+    i_und=107;
+    op3_cur=795;
+    field_disp_z=15;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+    k_scale=-14.59;
+    i_und=107;
+    op3_cur=795;
+    field_disp_z=14.*32.5+5;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+
+    k_scale=-0.11;
+    i_und=107;
+    field_rot_angle=pi/2.;
+    op3_cur=795;
+    field_disp_z=15;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+    k_scale=-0.14;
+    i_und=107;
+    field_rot_angle=pi/2.;
+    op3_cur=795;
+    field_disp_z=14.*32.5+5;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+  }
+  else if (i_und==85331)
+  {
+//    k_scale=339/401.;
+//    x_init=-0.0276;
+//    y_init=-0.0363;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
 /*
-    k_scale=0.088;
-    i_und=107;
-    field_rot_angle=0.;
-    op3_cur=795;
-    field_disp_z=14.*32.5+15;
-    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+    x_init=-0.05;
+    y_init=0.306;
+    px_init=0.508e-3;
+    py_init=-3.066e-3;
+    pz_init=sqrt(1-px_init*px_init-py_init*py_init);
 */
+
+    k_scale=15.574;
+    i_und=107;
+    op3_cur=795;
+    field_disp_z=15;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+    k_scale=-15.952;
+    i_und=107;
+    op3_cur=795;
+    field_disp_z=14.*32.5+5;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+
+    k_scale=2.60;
+    i_und=107;
+    field_rot_angle=pi/2.;
+    op3_cur=795;
+    field_disp_z=15;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+    k_scale=2.70;
+    i_und=107;
+    field_rot_angle=pi/2.;
+    op3_cur=795;
+    field_disp_z=14.*32.5+5;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+  }
+  else if (i_und==85321)
+  {
+//    k_scale=339/401.;
+//    x_init=-0.0276;
+//    y_init=-0.0363;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+    x_init=-0.05;
+    y_init=0.306;
+    px_init=0.508e-3;
+    py_init=-3.066e-3;
+    pz_init=sqrt(1-px_init*px_init-py_init*py_init);
+  }
+  else if (i_und==8535)
+  {
+//    k_scale=339/401.;
+//    x_init=-0.0276;
+//    y_init=-0.0363;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+    k_scale=15.65;
+    i_und=107;
+    op3_cur=795;
+    field_disp_z=15;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+    k_scale=-15.792;
+    i_und=107;
+    op3_cur=795;
+    field_disp_z=14.*32.5+5;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+
+    k_scale=2.67;
+    i_und=107;
+    field_rot_angle=pi/2.;
+    op3_cur=795;
+    field_disp_z=15;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+    k_scale=2.50;
+    i_und=107;
+    field_rot_angle=pi/2.;
+    op3_cur=795;
+    field_disp_z=14.*32.5+5;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+  }
+  else if (i_und==85361)
+  {
+//    k_scale=339/401.;
+//    x_init=-0.0276;
+//    y_init=-0.0363;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+    k_scale=14.479;
+    i_und=107;
+    op3_cur=795;
+    field_disp_z=15;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+    k_scale=-14.482;
+    i_und=107;
+    op3_cur=795;
+    field_disp_z=14.*32.5+5;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+
+    k_scale=-0.06;
+    i_und=107;
+    field_rot_angle=pi/2.;
+    op3_cur=795;
+    field_disp_z=15;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+    k_scale=-0.10;
+    i_und=107;
+    field_rot_angle=pi/2.;
+    op3_cur=795;
+    field_disp_z=14.*32.5+5;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+  }
+  else if (i_und==85381 || i_und==85382)
+  {
+    k_scale=1500./1493.68;
+    double k_scale_tmp=k_scale;
+//    x_init=-0.0276;
+//    y_init=-0.0363;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+    k_scale=14.494*k_scale_tmp;
+    i_und=107;
+    op3_cur=795;
+    field_disp_z=15;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+    k_scale=-14.507*k_scale_tmp;
+    i_und=107;
+    op3_cur=795;
+    field_disp_z=14.*32.5+5;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+
+    k_scale=-0.085*k_scale_tmp;
+    i_und=107;
+    field_rot_angle=pi/2.;
+    op3_cur=795;
+    field_disp_z=15;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+    k_scale=-0.18*k_scale_tmp;
+    i_und=107;
+    field_rot_angle=pi/2.;
+    op3_cur=795;
+    field_disp_z=14.*32.5+5;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+  }
+  else if (i_und==853841)
+  {
+    double k_scale_tmp=k_scale;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+    k_scale=14.494*k_scale_tmp;
+    i_und=107;
+    op3_cur=795;
+    field_disp_z=15;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+    k_scale=-14.507*k_scale_tmp;
+    i_und=107;
+    op3_cur=795;
+    field_disp_z=14.*32.5+5;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+
+    k_scale=-0.085*k_scale_tmp;
+    i_und=107;
+    field_rot_angle=pi/2.;
+    op3_cur=795;
+    field_disp_z=15;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+    k_scale=-0.18*k_scale_tmp;
+    i_und=107;
+    field_rot_angle=pi/2.;
+    op3_cur=795;
+    field_disp_z=14.*32.5+5;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+  }
+  else if (i_und==85386)
+  {
+    double k_scale_tmp=k_scale;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+    k_scale=14.634*k_scale_tmp;
+    i_und=107;
+    op3_cur=795;
+    field_disp_z=15;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+    k_scale=-14.507*k_scale_tmp;
+    i_und=107;
+    op3_cur=795;
+    field_disp_z=14.*32.5+5;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+
+    k_scale=-0.085*k_scale_tmp;
+    i_und=107;
+    field_rot_angle=pi/2.;
+    op3_cur=795;
+    field_disp_z=15;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+    k_scale=0.02*k_scale_tmp;
+    i_und=107;
+    field_rot_angle=pi/2.;
+    op3_cur=795;
+    field_disp_z=14.*32.5+5;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+  }
+  else if (i_und==853861)
+  {
+    k_scale=1500./1484.65;
+    double k_scale_tmp=k_scale;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+    k_scale=14.204*k_scale_tmp;
+    i_und=107;
+    op3_cur=795;
+    field_disp_z=15;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+    k_scale=-14.247*k_scale_tmp;
+    i_und=107;
+    op3_cur=795;
+    field_disp_z=14.*32.5+5;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+
+    k_scale=-0.05*k_scale_tmp;
+    i_und=107;
+    field_rot_angle=pi/2.;
+    op3_cur=795;
+    field_disp_z=15;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+    k_scale=-0.109*k_scale_tmp;
+    i_und=107;
+    field_rot_angle=pi/2.;
+    op3_cur=795;
+    field_disp_z=14.*32.5+5;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+  }
+  else if (i_und==85391)
+  {
+//    k_scale=339/401.;
+//    x_init=-0.0276;
+//    y_init=-0.0363;
+    k_scale=1500/1493.75;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+    k_scale=14.636;
+    i_und=107;
+    op3_cur=795;
+    field_disp_z=15;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+    k_scale=-14.473;
+    i_und=107;
+    op3_cur=795;
+    field_disp_z=14.*32.5+5;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+
+    k_scale=-0.043;
+    i_und=107;
+    field_rot_angle=pi/2.;
+    op3_cur=795;
+    field_disp_z=15;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
+
+    k_scale=-0.055;
+    i_und=107;
+    field_rot_angle=pi/2.;
+    op3_cur=795;
+    field_disp_z=14.*32.5+5;
+    read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
   }
   else if (i_und>=10)
   {
@@ -146,6 +496,8 @@ void track_part_hel_und()
 //  loop over rotation angles to find the most suitable picture
 //  for (rotation_angle=0; rotation_angle<=2.*TMath::Pi(); rotation_angle+=TMath::Pi()/32.)
   {
+    x_init_tmp=x_init;
+    y_init_tmp=y_init;
     runge_kutta_prop(x_init, y_init, z_init, px_init, py_init, pz_init, x_max, y_max, z_min, z_max);
     make_plots();
   }
@@ -704,9 +1056,37 @@ void make_plots()
 
 //  cout<<"600  "<< get_i_from_z(600.)<<endl;
 //  cout<<"925  "<< get_i_from_z(925.)<<endl;
-  int i1_tmp=get_i_from_z(650.+0.*325.-100.);
-  int i2_tmp=get_i_from_z(975.+0.*325.-100.);
-  double k=1./325.;
+
+
+  int i1_start_tmp=get_i_from_z(-400+1.e-7);
+  int i2_start_tmp=get_i_from_z(4900+1.e-7);
+  cout<<"index1="<<i1_start_tmp<<endl;
+  cout<<"z(-0.4m)="<<z_gr[i1_start_tmp]<<" mm"<<endl;
+  cout<<"x(-0.4m)="<<x_gr[i1_start_tmp]<<" mm,            x(-0.4m)-y(-100cm)="<<x_gr[i1_start_tmp]-10*x_init_tmp<<" mm"<<endl;
+  cout<<"y(-0.4m)="<<y_gr[i1_start_tmp]<<" mm,            y(-0.4m)-y(-100cm)="<<y_gr[i1_start_tmp]-10*y_init_tmp<<" mm"<<endl;
+  cout<<"px(-0.4m)="<<px_gr[i1_start_tmp]<<" MeV"<<endl;
+  cout<<"py(-0.4m)="<<py_gr[i1_start_tmp]<<" MeV"<<endl;
+
+  cout<<"index2="<<i2_start_tmp<<endl;
+  cout<<"z(4.9m)="<<z_gr[i2_start_tmp]<<" mm"<<endl;
+  cout<<"x(4.9m)="<<x_gr[i2_start_tmp]<<" mm,            x(4.9m)-y(-100cm)="<<x_gr[i2_start_tmp]-10*x_init_tmp<<" mm"<<endl;
+  cout<<"y(4.9m)="<<y_gr[i2_start_tmp]<<" mm,            y(4.9m)-y(-100cm)="<<y_gr[i2_start_tmp]-10*y_init_tmp<<" mm"<<endl;
+  cout<<"px(4.9m)="<<px_gr[i2_start_tmp]<<" MeV"<<endl;
+  cout<<"py(4.9m)="<<py_gr[i2_start_tmp]<<" MeV"<<endl;
+
+
+  int i1_tmp=get_i_from_z((n_period/2-0.5)*325+1.e-7);
+  int i2_tmp=get_i_from_z((n_period/2+0.5)*325+1.e-7);
+  if (n_period>10)
+  {
+    i1_tmp=get_i_from_z(3*325+1.e-7);
+    i2_tmp=get_i_from_z((n_period-3)*325+1.e-7);
+  }
+  int j1_tmp=get_i_from_z((n_period/2-1)*325+1.e-7);
+  int j2_tmp=get_i_from_z((n_period/2)*325+1.e-7);
+  j1_tmp=i1_tmp;
+  j2_tmp=i2_tmp;
+ double k=1./325.;
 
 
   TF1 * func1 = new TF1("func1", "[0]*sin([1]*x-[2])+[3]", 1200., 1725.);
@@ -722,14 +1102,15 @@ void make_plots()
 
   double dx=0;
   double dy=0;
-  double dz=0;
+  double dzx=0;
+  double dzy=0;
   double sum_x=0;
   double sum_y=0;
   if (i1_tmp != -1)
   if (i2_tmp != -1)
   {
-    dx=x_gr[i2_tmp]-x_gr[i1_tmp];
-    cout<<" x="<<x_gr[i1_tmp]<<"     "<<x_gr[i2_tmp]<<endl;
+    dx=x_gr[j2_tmp]-x_gr[j1_tmp];
+    cout<<" x="<<x_gr[j1_tmp]<<"     "<<x_gr[j2_tmp]<<endl;
     cout<<" y="<<y_gr[i1_tmp]<<"     "<<y_gr[i2_tmp]<<endl;
     cout<<" z="<<z_gr[i1_tmp]<<"     "<<z_gr[i2_tmp]<<endl;
     int nsum=0;
@@ -742,25 +1123,27 @@ void make_plots()
     sum_x/=double(nsum);
     sum_y/=double(nsum);
     dy=y_gr[i2_tmp]-y_gr[i1_tmp];
-    dz=z_gr[i2_tmp]-z_gr[i1_tmp];
+    dzx=z_gr[j2_tmp]-z_gr[j1_tmp];
+    dzy=z_gr[i2_tmp]-z_gr[i1_tmp];
   }
+  cout<<"mean_x="<<sum_x<<"    mean_y="<<sum_y<<endl;
 
 
   cc->cd(1);
   gr_x->Draw("AP");
 //  gr_x->Fit(func1, "R");
-  if (dz!=0)
+  if (dzx!=0)
   {
-    TLatex *text1_angle = new TLatex(0., sum_x+0.2, Form("x' = %.6f mrad", dx/dz*1000.) );
+    TLatex *text1_angle = new TLatex(0., sum_x-0.2, Form("x' = %.6f mrad", dx/dzx*1000.) );
     text1_angle->SetTextAlign(12);
     text1_angle->SetTextColor(4);
     text1_angle->SetTextSize(0.07);
     text1_angle->Draw();
     ofstream outfile;
     outfile.open("res.txt", ios::out | ios::app );
-    outfile<<i_und<<"    x'="<<dx/dz*1000.<<"    y'="<<dy/dz*1000.<<endl;
+    outfile<<i_und<<"    x'="<<dx/dzx*1000.<<"    y'="<<dy/dzy*1000.<<endl;
     outfile.close();
-    cout<<"radiation angle x'="<<dx/dz*1000.<<" mrad,   y'="<<dy/dz*1000.<<endl;
+    cout<<"radiation angle x'="<<dx/dzx*1000.<<" mrad,   y'="<<dy/dzy*1000.<<endl;
 /*
     TLatex *text1_offset = new TLatex(0., sum_x, Form("x_{cent} = %.8f mm", sum_x) );
     text1_offset->SetTextAlign(12);
@@ -779,10 +1162,10 @@ void make_plots()
   cc->cd(1+div_nx);
   gr_y->Draw("AP");
 //  gr_y->Fit(func1, "R");
-  if (dz!=0)
+  if (dzx!=0)
   {
 //    TLatex *text2_angle = new TLatex(900., y_gr[i2_tmp], Form("y' = %.3f mrad", dy/dz*1000.) );
-    TLatex *text2_angle = new TLatex(0., 0., Form("y' = %.6f mrad", dy/dz*1000.) );
+    TLatex *text2_angle = new TLatex(0., sum_y+0.2, Form("y' = %.6f mrad", dy/dzy*1000.) );
     text2_angle->SetTextAlign(12);
     text2_angle->SetTextColor(4);
     text2_angle->SetTextSize(0.07);
@@ -817,12 +1200,12 @@ void make_plots()
 
   cc->cd(3);
   gr_px->Draw("AP");
-  TLatex *text1 = new TLatex(2000., 2.0, Form("p_{x} = %.6f MeV", px_gr[n_gr-3] ) );
+  TLatex *text1 = new TLatex(n_period*325, 1.0, Form("p_{x} = %.6f MeV", px_gr[n_gr-3] ) );
   text1->Draw();
 
   cc->cd(3+div_nx);
   gr_py->Draw("AP");
-  TLatex *text2 = new TLatex(2000., 2.0, Form("p_{y} = %.6f MeV", py_gr[n_gr-3] ) );
+  TLatex *text2 = new TLatex(n_period*325, 1.0, Form("p_{y} = %.6f MeV", py_gr[n_gr-3] ) );
   text2->Draw();
 
   cc->cd(3+2*div_nx);
