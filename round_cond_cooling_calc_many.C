@@ -4,17 +4,17 @@ void plot_all();
 int get_n_central();
 vector<int> get_n_first(TH2D *);
 
-double ngroupping_per_layer=2;                       // 1 is for continuous winding per each layer
-bool is_dec_design=false;                           // dec-apr design difference is the end region winding. Apr design assumes condinuous winding
+double ngroupping_per_layer=2;                     // 1 is for continuous winding per each layer
+bool is_dec_design=true;                           // dec-apr design difference is the end region winding. Apr design assumes condinuous winding
 bool plot_individual=false;
 double cool_pres, tot_power, cden_final, cur_single,lcond_total, steel_mass, voltage_drop, tot_resist;
 double nx_old[20], field_old[20], ny_old[12];
 double inch = 2.54;
 double dcond = 0.25*inch;                           //conductor diameter
 double dhole = 0.12*inch;                           //conductor hole diameter
-double deltat = 35;
-double n_period=14.;                                //number of undulator periods
-double cond_length_at_ends_per_turn = 50;           //each turn conductor additional length at the ends
+double deltat = 25;
+double n_period=14.5;                                //number of undulator periods
+double cond_length_at_ends_per_turn = 100;          //each turn conductor additional length at the ends
 
 double insul_y=0.03;
 double insul_x=0.021357;
@@ -23,7 +23,7 @@ double cond_height_single = dcond+insul_y;
 double cond_width_single = dcond+insul_x;
 double pi=TMath::Pi();
 double RC0=4.5;
-double pitch=32.5;
+double pitch=28;
 double alpha_dn=atan(2*pi*RC0/pitch);
 double frac_w_real=sin(alpha_dn);
 int n_per_width=11;
@@ -31,7 +31,7 @@ int n_per_height=8;
 int ny_central=3;
 double mass_total;
 
-int i_set=1;
+int i_set=3;
 int sett[10]={1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 string name[10]={"1to4_0.152", "1to4_0.12", "5to16_0.215", "5to16_0.183", "3to8_0.277", "3to8_0.245", "1to2_0.402", "1to2_0.37", "3to8_0.18", "1to2_0.24"};
 double dcond_set[10] = {1./4., 1./4., 5./16., 5./16., 3./8., 3./8., 1./2., 1./2., 3./8., 1./2.};
@@ -265,7 +265,7 @@ void plot_all()
     voltage_drop=0;
     tot_resist=0;
     mass_total=0;
-    steel_mass=(pitch-(cond_width_single/frac_w_real)*nx_old[i]*2.)/pitch*pi*((RC0+cond_height_single*ny_old[j])*(RC0+cond_height_single*ny_old[j])-RC0*RC0)*pitch*14.*7.850;
+    steel_mass=(pitch-(cond_width_single/frac_w_real)*nx_old[i]*2.)/pitch*pi*((RC0+cond_height_single*ny_old[j])*(RC0+cond_height_single*ny_old[j])-RC0*RC0)*pitch*n_period*7.850;
     cout<<i<<"       "<<j<<"    inside loop    nx="<<nx_old[i]<<"    ny="<<ny_old[j]<<"        ny_old[ny_central]="<<ny_old[ny_central]<<"     scaled field="<<field_old[i]*ny_old[j]/ny_old[ny_central]<<endl;
     cool_pres=0;
     cooling_calc(nx_old[i], ny_old[j], field_old[i]*ny_old[j]/ny_old[ny_central]);
@@ -449,12 +449,17 @@ void cooling_calc(double nx1, double ny1, double field1)
 //  tot_width=nx*dcond;                                  //total width of helix conductor
 //  tot_height=ny*dcond;                                 //total height of helix conductor
   double field=field1;
+  field=field1/(1.39/1.5);
+  if ( fabs(pitch - 28.0) < 1 ) 
+  {
+    field=field1/(1.72/1.5);
+    if (i_set==1) field=field1/(0.95686100*1.72/1.5);
+  }
 
 
 
 
-
-  double portion = 1.5/field;                           //field scale
+  double portion = 1.5/field;                          //field scale
 //  portion = 1.;                                       //field scale
   double op3_cur_den=300;
   double current=op3_cur_den*tot_width*tot_height*portion;  //total current per helix
@@ -486,7 +491,7 @@ void cooling_calc(double nx1, double ny1, double field1)
   {
     double rad = 4.5+0.5*cond_height_single+double(i_layer)*cond_height_single;
     double lrad = 2.*pi*rad*n_period;
-    double length = 32.5*n_period;
+    double length = pitch*n_period;
     double lturn = sqrt(length*length+lrad*lrad)+cond_length_at_ends_per_turn;       // length of one turn of each helix
     lcond_per_layer[i_layer]=nx*lturn;
     cout<<"-------------------------------------> i="<<i_layer<<"      rad="<<rad<<"       lturn="<<lturn<<"      l_layer="<<lcond_per_layer[i_layer]<<endl;
@@ -513,7 +518,7 @@ void cooling_calc(double nx1, double ny1, double field1)
     }
 //    cout<<"------------------------------------->"<<i_layer<<"    "<<rad<<"    "<<dcond/inch<<"    "<<larger_diam<<endl;
     double lrad = 2.*pi*rad*n_period;
-    double length = 32.5*n_period;
+    double length = pitch*n_period;
     double lturn = sqrt(length*length+lrad*lrad);       // Average length of one turn of each helix
     lturn+=4.5+2.*7.+pi*rad;                            // end regions
     double lcond = 2*nx*lturn/ngroupping_per_layer+100;  // We obtain the total coil length, multiplying by the number of turns. 2 helices
@@ -527,12 +532,12 @@ void cooling_calc(double nx1, double ny1, double field1)
     //We can then obtain the power per coil and the voltage per magnet.
     //resCoil=1.7e-8*lcond/acond.   1.7e-8 ohm meter.
 
-    double rescoil = 1.7e-6*lcond/acond;                // resistence of nx turns, one helix
-    double powcoil = rescoil*pscurr*pscurr;             // power per each helix
-    double psvolts = pscurr*rescoil;                    // Power drop for each turn
+    double rescoil = 1.7e-6*lcond/acond*(1.+deltat*0.393e-2); // resistence of nx turns, one helix
+    double powcoil = rescoil*pscurr*pscurr;                   // power per each helix
+    double psvolts = pscurr*rescoil;                          // Power drop for each turn
     double single_cur = pscurr;
     cur_single = single_cur;
-    double lcirc = 0.01*lcond;                          // Length per water circuit in meters
+    double lcirc = 0.01*lcond;                                // Length per water circuit in meters
     total_power+=powcoil*ngroupping_per_layer;
     total_volts+=psvolts*ngroupping_per_layer;
 //    cout<<"                          0:    pscur="<<pscurr<<"     res="<<rescoil<<"     dhole="<<dhole<<"     dCOND="<<dcond<<"     A_COND="<<acond<<"     res="<<rescoil<<endl;
