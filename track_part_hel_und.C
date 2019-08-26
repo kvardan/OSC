@@ -28,11 +28,13 @@ void track_part_hel_und()
   prepare_for_plots();
 //  k_scale=0.847;
 //  k_scale=221./228.;
-  n_period=14;
+  n_period=4;
+  l_period=28;
   k_scale=1.;
 
-  i_und=-1;
-  int op3_cur=228;
+  i_und=850771772;
+  int op3_cur=330;
+  pz_init=1;
 //  i_und=-1;
 
   if (i_und==-1)
@@ -91,14 +93,14 @@ void track_part_hel_und()
     i_und=107;
     field_rot_angle=pi/2.;
     op3_cur=795;
-    field_disp_z=14.*32.5+25;
+    field_disp_z=14.*l_period+25;
     read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
 
     k_scale=0.088;
     i_und=107;
     field_rot_angle=0.;
     op3_cur=795;
-    field_disp_z=14.*32.5+15;
+    field_disp_z=14.*l_period+15;
     read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
   }
   else if (i_und==85501)
@@ -117,7 +119,7 @@ void track_part_hel_und()
     k_scale=-14.42;
     i_und=107;
     op3_cur=795;
-    field_disp_z=14.*32.5+5;
+    field_disp_z=14.*l_period+5;
     read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
 
 
@@ -132,7 +134,7 @@ void track_part_hel_und()
     i_und=107;
     field_rot_angle=pi/2.;
     op3_cur=795;
-    field_disp_z=14.*32.5+5;
+    field_disp_z=14.*l_period+5;
     read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
   }
   else if (i_und==8556)
@@ -151,7 +153,7 @@ void track_part_hel_und()
     k_scale=-14.435;
     i_und=107;
     op3_cur=795;
-    field_disp_z=14.*32.5+5;
+    field_disp_z=14.*l_period+5;
     read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
 
 
@@ -166,7 +168,7 @@ void track_part_hel_und()
     i_und=107;
     field_rot_angle=pi/2.;
     op3_cur=795;
-    field_disp_z=14.*32.5+5;
+    field_disp_z=14.*l_period+5;
     read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
   }
   else if (i_und==8540)
@@ -185,7 +187,7 @@ void track_part_hel_und()
     k_scale=-14.59;
     i_und=107;
     op3_cur=795;
-    field_disp_z=14.*32.5+5;
+    field_disp_z=14.*l_period+5;
     read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
 
 
@@ -200,7 +202,7 @@ void track_part_hel_und()
     i_und=107;
     field_rot_angle=pi/2.;
     op3_cur=795;
-    field_disp_z=14.*32.5+5;
+    field_disp_z=14.*l_period+5;
     read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
   }
   else if (i_und==85331)
@@ -226,7 +228,7 @@ void track_part_hel_und()
     k_scale=-15.952;
     i_und=107;
     op3_cur=795;
-    field_disp_z=14.*32.5+5;
+    field_disp_z=14.*l_period+5;
     read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
 
 
@@ -241,7 +243,7 @@ void track_part_hel_und()
     i_und=107;
     field_rot_angle=pi/2.;
     op3_cur=795;
-    field_disp_z=14.*32.5+5;
+    field_disp_z=14.*l_period+5;
     read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
   }
   else if (i_und==85321)
@@ -272,7 +274,7 @@ void track_part_hel_und()
     k_scale=-15.792;
     i_und=107;
     op3_cur=795;
-    field_disp_z=14.*32.5+5;
+    field_disp_z=14.*l_period+5;
     read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
 
 
@@ -287,7 +289,7 @@ void track_part_hel_und()
     i_und=107;
     field_rot_angle=pi/2.;
     op3_cur=795;
-    field_disp_z=14.*32.5+5;
+    field_disp_z=14.*l_period+5;
     read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
   }
   else if (i_und==85361)
@@ -306,7 +308,7 @@ void track_part_hel_und()
     k_scale=-14.482;
     i_und=107;
     op3_cur=795;
-    field_disp_z=14.*32.5+5;
+    field_disp_z=14.*l_period+5;
     read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
 
 
@@ -321,7 +323,7 @@ void track_part_hel_und()
     i_und=107;
     field_rot_angle=pi/2.;
     op3_cur=795;
-    field_disp_z=14.*32.5+5;
+    field_disp_z=14.*l_period+5;
     read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
   }
   else if (i_und==85381 || i_und==85382)
@@ -340,7 +342,7 @@ void track_part_hel_und()
     k_scale=-14.507*k_scale_tmp;
     i_und=107;
     op3_cur=795;
-    field_disp_z=14.*32.5+5;
+    field_disp_z=14.*l_period+5;
     read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
 
 
@@ -355,7 +357,7 @@ void track_part_hel_und()
     i_und=107;
     field_rot_angle=pi/2.;
     op3_cur=795;
-    field_disp_z=14.*32.5+5;
+    field_disp_z=14.*l_period+5;
     read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
   }
   else if (i_und==853841)
@@ -371,7 +373,7 @@ void track_part_hel_und()
     k_scale=-14.507*k_scale_tmp;
     i_und=107;
     op3_cur=795;
-    field_disp_z=14.*32.5+5;
+    field_disp_z=14.*l_period+5;
     read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
 
 
@@ -386,7 +388,7 @@ void track_part_hel_und()
     i_und=107;
     field_rot_angle=pi/2.;
     op3_cur=795;
-    field_disp_z=14.*32.5+5;
+    field_disp_z=14.*l_period+5;
     read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
   }
   else if (i_und==85386)
@@ -402,7 +404,7 @@ void track_part_hel_und()
     k_scale=-14.507*k_scale_tmp;
     i_und=107;
     op3_cur=795;
-    field_disp_z=14.*32.5+5;
+    field_disp_z=14.*l_period+5;
     read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
 
 
@@ -417,7 +419,7 @@ void track_part_hel_und()
     i_und=107;
     field_rot_angle=pi/2.;
     op3_cur=795;
-    field_disp_z=14.*32.5+5;
+    field_disp_z=14.*l_period+5;
     read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
   }
   else if (i_und==853861)
@@ -434,7 +436,7 @@ void track_part_hel_und()
     k_scale=-14.247*k_scale_tmp;
     i_und=107;
     op3_cur=795;
-    field_disp_z=14.*32.5+5;
+    field_disp_z=14.*l_period+5;
     read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
 
 
@@ -449,7 +451,7 @@ void track_part_hel_und()
     i_und=107;
     field_rot_angle=pi/2.;
     op3_cur=795;
-    field_disp_z=14.*32.5+5;
+    field_disp_z=14.*l_period+5;
     read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
   }
   else if (i_und==85391)
@@ -469,7 +471,7 @@ void track_part_hel_und()
     k_scale=-14.473;
     i_und=107;
     op3_cur=795;
-    field_disp_z=14.*32.5+5;
+    field_disp_z=14.*l_period+5;
     read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
 
 
@@ -484,7 +486,7 @@ void track_part_hel_und()
     i_und=107;
     field_rot_angle=pi/2.;
     op3_cur=795;
-    field_disp_z=14.*32.5+5;
+    field_disp_z=14.*l_period+5;
     read_field(Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", i_und, op3_cur));
   }
   else if (i_und>=10)
@@ -544,10 +546,10 @@ void runge_kutta_prop(double x0, double y0, double z0, double px0, double py0, d
     double dz=0.002; // the dz step size (in cm) for the Runge-Kutta propogator
     dt=fabs(P_new/Pz_new)*dz/cl;
     vector<double> b = get_bfield(x_new, y_new, z_new);
-//    if ( z_new > 32.5*2.5 ) b = get_bfield(x_new, y_new, 32.5*2.5 - (z_new - 32.5*2.5) );
+//    if ( z_new > l_period*2.5 ) b = get_bfield(x_new, y_new, l_period*2.5 - (z_new - l_period*2.5) );
     TVector3 B_rot(b[0], b[1], b[2]);
-//    if ( z_new > 32.5*2.5 ) B_rot[1]=-1.*B_rot[1];
-//    if ( z_new > 32.5*2.5 ) B_rot[2]=-1.*B_rot[2];
+//    if ( z_new > l_period*2.5 ) B_rot[1]=-1.*B_rot[1];
+//    if ( z_new > l_period*2.5 ) B_rot[2]=-1.*B_rot[2];
     if (0)
     if (i_und==66730)
     if (fabs(z_new+10.)<1e-6)
@@ -694,22 +696,22 @@ void read_field(string filename)
           by_arr[ix][iy][iz]=0.3*k_scale*by;
           bz_arr[ix][iy][iz]=0.3*k_scale*bz;
         }
-        else if (z<32.5*0.5)
+        else if (z<l_period*0.5)
         {
-          double k_factor_new=0.3+0.7*z/(32.5*0.5);
+          double k_factor_new=0.3+0.7*z/(l_period*0.5);
           bx_arr[ix][iy][iz]=k_factor_new*k_scale*bx;
           by_arr[ix][iy][iz]=k_factor_new*k_scale*by;
           bz_arr[ix][iy][iz]=k_factor_new*k_scale*bz;
         }
-        else if (z>5*32.5)
+        else if (z>5*l_period)
         {
           bx_arr[ix][iy][iz]=0.3*k_scale*bx;
           by_arr[ix][iy][iz]=0.3*k_scale*by;
           bz_arr[ix][iy][iz]=0.3*k_scale*bz;
         }
-        else if (z>5*32.5-32.5*0.5)
+        else if (z>5*l_period-l_period*0.5)
         {
-          double k_factor_new=0.3+0.7*(5*32.5-z)/(32.5*0.5);
+          double k_factor_new=0.3+0.7*(5*l_period-z)/(l_period*0.5);
           bx_arr[ix][iy][iz]=k_factor_new*k_scale*bx;
           by_arr[ix][iy][iz]=k_factor_new*k_scale*by;
           bz_arr[ix][iy][iz]=k_factor_new*k_scale*bz;
@@ -1075,18 +1077,18 @@ void make_plots()
   cout<<"py(4.9m)="<<py_gr[i2_start_tmp]<<" MeV"<<endl;
 
 
-  int i1_tmp=get_i_from_z((n_period/2-0.5)*325+1.e-7);
-  int i2_tmp=get_i_from_z((n_period/2+0.5)*325+1.e-7);
+  int i1_tmp=get_i_from_z((n_period/2-0.5)*10.*l_period+1.e-7);
+  int i2_tmp=get_i_from_z((n_period/2+0.5)*10.*l_period+1.e-7);
   if (n_period>10)
   {
-    i1_tmp=get_i_from_z(3*325+1.e-7);
-    i2_tmp=get_i_from_z((n_period-3)*325+1.e-7);
+    i1_tmp=get_i_from_z(3*10.*l_period+1.e-7);
+    i2_tmp=get_i_from_z((n_period-3)*10.*l_period+1.e-7);
   }
-  int j1_tmp=get_i_from_z((n_period/2-1)*325+1.e-7);
-  int j2_tmp=get_i_from_z((n_period/2)*325+1.e-7);
+  int j1_tmp=get_i_from_z((n_period/2-1)*10.*l_period+1.e-7);
+  int j2_tmp=get_i_from_z((n_period/2)*10.*l_period+1.e-7);
   j1_tmp=i1_tmp;
   j2_tmp=i2_tmp;
- double k=1./325.;
+ double k=1./10.*l_period;
 
 
   TF1 * func1 = new TF1("func1", "[0]*sin([1]*x-[2])+[3]", 1200., 1725.);
@@ -1200,12 +1202,12 @@ void make_plots()
 
   cc->cd(3);
   gr_px->Draw("AP");
-  TLatex *text1 = new TLatex(n_period*325, 1.0, Form("p_{x} = %.6f MeV", px_gr[n_gr-3] ) );
+  TLatex *text1 = new TLatex(n_period*10.*l_period, 1.0, Form("p_{x} = %.6f MeV", px_gr[n_gr-3] ) );
   text1->Draw();
 
   cc->cd(3+div_nx);
   gr_py->Draw("AP");
-  TLatex *text2 = new TLatex(n_period*325, 1.0, Form("p_{y} = %.6f MeV", py_gr[n_gr-3] ) );
+  TLatex *text2 = new TLatex(n_period*10.*l_period, 1.0, Form("p_{y} = %.6f MeV", py_gr[n_gr-3] ) );
   text2->Draw();
 
   cc->cd(3+2*div_nx);

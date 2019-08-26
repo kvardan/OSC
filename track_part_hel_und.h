@@ -66,11 +66,14 @@ double pz_gr[n_gr_max];
 double pt_gr[n_gr_max];
 
 int n_gr;
+double x_init_tmp, y_init_tmp;
 double field_rot_angle, pi, field_disp_z;
 double rotation_angle, z_offset, k_scale;
 double x_field_start, y_field_start, z_field_start;
 double dx_field, dy_field, dz_field;
 int i_und;
+double n_period;
+double l_period;
 int nx;
 int ny;
 int nz;
