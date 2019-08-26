@@ -73,9 +73,9 @@ double py_gr[n_gr_max];
 double pz_gr[n_gr_max];
 
 int n_gr;
-double rotation_angle, z_offset, k_scale;
+double rotation_angle, z_offset, k_scale, period_l;
 double z_field_start, x_field_start, y_field_start;
-int i_und;
+int i_und, curr_den;
 int nx;
 int ny;
 int nz;
