@@ -15,15 +15,24 @@ TGraph * gr_abs;
 //double scale=10675.710891858/10863.6794850346;
 //double scale=1500./1483.;
 //double scale=1500./1497.45;
+//double scale=220./217.407336099129;  // rect/round conductors
 double scale=1.;
 double pi=TMath::Pi();
 
 int n;
-int n_und=853842;
-int current=228;
-double n_period=5;
-double fit_range_min=2*1.5*16.25;
-double fit_range_max=2*3.5*16.25;
+//double n_und=8207;
+//int current=228;
+//int n_und=85507717;
+//int current=335;
+double n_und=850771722;
+int current=330;
+
+//double n_und=82040004;
+//int current=221;
+double l_period=28;
+double n_period=4;
+double fit_range_min=2*1.5*l_period/2.;
+double fit_range_max=2*3.5*l_period/2.;
 bool Bx_fit_is_good=0;
 bool use_minuit_fit=1;
 bool tight_cuts=1;
@@ -59,28 +68,30 @@ void field_fit_single()
 {
     if (n_period>=6)
     {
-      fit_range_min=2*2*16.25;
-      fit_range_max=2*(n_period-2)*16.25;
+      fit_range_min=2*2*l_period/2.;
+      fit_range_max=2*(n_period-2)*l_period/2.;
     }
     if (n_period<=6)
     {
-      fit_range_min=2*1.5*16.25;
-      fit_range_max=2*(n_period-1.5)*16.25;
+      fit_range_min=2*1.5*l_period/2.;
+      fit_range_max=2*(n_period-1.5)*l_period/2.;
+//      fit_range_min=2*2*l_period/2.;
+//      fit_range_max=2*(n_period-2)*l_period/2.;
     }
 
     if (n_period<=3)
     {
-      fit_range_min=2*1*16.25;
-      fit_range_max=2*(n_period-1)*16.25;
+      fit_range_min=2*1*l_period/2.;
+      fit_range_max=2*(n_period-1)*l_period/2.;
     }
 
     if (n_period<=2)
     {
-      fit_range_min=2*(n_period/2-n_period/8)*16.25;
-      fit_range_max=2*(n_period/2+n_period/8)*16.25;
-//      fit_range_min=20;
-//      fit_range_max=23;
+      fit_range_min=2*(n_period/2-n_period/8)*l_period/2.;
+      fit_range_max=2*(n_period/2+n_period/8)*l_period/2.;
     }
+//    fit_range_min=-10;
+//    fit_range_max=10;
 
 //  n_und=85321; n_period=5; scale=1500/1499.51;
 //  n_und=85331; n_period=5; scale=1500/1499.51;
@@ -100,20 +111,20 @@ void field_fit_single()
 //  scale=1500/1497.65;
   if (n_period==14)
   {
-    fit_range_min=2*2*16.25;
-    fit_range_max=2*12*16.25;
+    fit_range_min=2*2*l_period/2.;
+    fit_range_max=2*12*l_period/2.;
   }
   n=1;
 
 
-  if (n_und==-1)
+  if (int(n_und)==-1)
   {
     read_field_data("SRW_field.dat");
   }
 
   if (n_und>=10)
   {
-    read_field_data(  Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%d_%d_xyz.table", n_und, current));
+    read_field_data(  Form("/nfs/acc/user/vk348/opera/v9_4_many_xare/hundulator_%.0f_%d_xyz.table", n_und, current));
   }
 
   if (use_minuit_fit) do_Minuit();
@@ -195,12 +206,12 @@ void draw_plots()
 //    gr_abs->SetMinimum(1480.);
   }
 
-//  fit_range_min=2*2*16.25;
-//  fit_range_max=12*2*16.25;
-//  fit_range_min=1.4*16.25;
-//  fit_range_max=2.6*16.25;
-//  fit_range_min=1.75*2*16.25;
-//  fit_range_max=3.25*2*16.25;
+//  fit_range_min=2*2*l_period/2.;
+//  fit_range_max=12*2*l_period/2.;
+//  fit_range_min=1.4*l_period/2.;
+//  fit_range_max=2.6*l_period/2.;
+//  fit_range_min=1.75*2*l_period/2.;
+//  fit_range_max=3.25*2*l_period/2.;
 
 
   TCanvas *c = new TCanvas("cc","cc",100, 0, 1600, 900);
@@ -212,7 +223,7 @@ void draw_plots()
   gr_abs->Fit(funcz1, "R");
   gr_abs->Draw("AP");
   TLine *l4_1 = new TLine(0., 0, 0, 2000);
-  TLine *l4_2 = new TLine(n_period*32.5, 0, n_period*32.5, 2000);
+  TLine *l4_2 = new TLine(n_period*l_period, 0, n_period*l_period, 2000);
   l4_1->SetLineStyle(2);
   l4_2->SetLineStyle(2);
   l4_1->SetLineWidth(2);
@@ -222,7 +233,7 @@ void draw_plots()
 
   c->cd(1);
   gStyle->SetOptFit(1);
-  double k=1./32.5;
+  double k=1./l_period;
 
   TF1 * funcx1 = new TF1("funcx1", "[0]*cos([1]*x-[2])", fit_range_min, fit_range_max);
   funcx1->SetParLimits(0, 0.999*funcz1->GetParameter(0), 1.001*funcz1->GetParameter(0));
@@ -241,12 +252,12 @@ void draw_plots()
     }
     if (loose_cuts)
     {
-      funcx1->SetParLimits(0, 0.9*fit_par_res[0], 1.1*fit_par_res[0]);
-      funcx1->SetParLimits(1, 0.9*fit_par_res[1], 1.1*fit_par_res[1]);
+      funcx1->SetParLimits(0, 0.49*fit_par_res[0], 1.51*fit_par_res[0]);
+      funcx1->SetParLimits(1, 0.49*fit_par_res[1], 1.51*fit_par_res[1]);
       if (fit_par_res[2]>0)
-        funcx1->SetParLimits(2, 0.9*fit_par_res[2], 1.1*fit_par_res[2]);
+        funcx1->SetParLimits(2, 0.49*fit_par_res[2], 1.51*fit_par_res[2]);
       if (fit_par_res[2]<0)
-        funcx1->SetParLimits(2, 1.1*fit_par_res[2], 0.9*fit_par_res[2]);
+        funcx1->SetParLimits(2, 1.51*fit_par_res[2], 0.49*fit_par_res[2]);
     }
   }
 
@@ -277,6 +288,11 @@ void draw_plots()
     gr_x->Fit(funcx1, "R");
   outfile<<n_und<<"     Ax="<<funcx1->GetParameter(0)<<endl;
 
+  double parx_0=funcx1->GetParameter(0);
+  double parx_1=funcx1->GetParameter(1);
+  double parx_2=funcx1->GetParameter(2);
+
+
   if (Bx_fit_is_good)
   {
     if (tight_cuts)
@@ -290,12 +306,12 @@ void draw_plots()
     }
     if (loose_cuts)
     {
-      funcy1->SetParLimits(0, 0.9*funcx1->GetParameter(0), 1.1*funcx1->GetParameter(0));
-      funcy1->SetParLimits(1, 0.9*funcx1->GetParameter(1), 1.1*funcx1->GetParameter(1));
+      funcy1->SetParLimits(0, 0.49*funcx1->GetParameter(0), 1.51*funcx1->GetParameter(0));
+      funcy1->SetParLimits(1, 0.49*funcx1->GetParameter(1), 1.51*funcx1->GetParameter(1));
       if (funcx1->GetParameter(2)>0)
-        funcy1->SetParLimits(2, 0.9*funcx1->GetParameter(2), 1.1*funcx1->GetParameter(2));
+        funcy1->SetParLimits(2, 0.49*funcx1->GetParameter(2), 1.51*funcx1->GetParameter(2));
       if (funcx1->GetParameter(2)<0)
-        funcy1->SetParLimits(2, 1.1*funcx1->GetParameter(2), 0.9*funcx1->GetParameter(2));
+        funcy1->SetParLimits(2, 1.51*funcx1->GetParameter(2), 0.49*funcx1->GetParameter(2));
     }
     cout<<"par1="<<funcx1->GetParameter(0)<<endl;
     cout<<"par2="<<funcx1->GetParameter(1)<<endl;
@@ -314,12 +330,12 @@ void draw_plots()
     }
     if (loose_cuts)
     {
-      funcy1->SetParLimits(0, 0.9*fit_par_res[0], 1.1*fit_par_res[0]);
-      funcy1->SetParLimits(1, 0.9*fit_par_res[1], 1.1*fit_par_res[1]);
+      funcy1->SetParLimits(0, 0.49*fit_par_res[0], 1.51*fit_par_res[0]);
+      funcy1->SetParLimits(1, 0.49*fit_par_res[1], 1.51*fit_par_res[1]);
       if (fit_par_res[2]>0)
-        funcy1->SetParLimits(2, 0.9*fit_par_res[2], 1.1*fit_par_res[2]);
+        funcy1->SetParLimits(2, 0.49*fit_par_res[2], 1.51*fit_par_res[2]);
       if (fit_par_res[2]<0)
-        funcy1->SetParLimits(2, 1.1*fit_par_res[2], 0.9*fit_par_res[2]);
+        funcy1->SetParLimits(2, 1.51*fit_par_res[2], 0.49*fit_par_res[2]);
     }
   }
 
@@ -328,7 +344,7 @@ void draw_plots()
 
 
   TLine *l1_1 = new TLine(0., -2300, 0, 2300);
-  TLine *l1_2 = new TLine(n_period*32.5, -2300, n_period*32.5, 2300);
+  TLine *l1_2 = new TLine(n_period*l_period, -2300, n_period*l_period, 2300);
   l1_1->SetLineStyle(2);
   l1_2->SetLineStyle(2);
   l1_1->SetLineWidth(2);
@@ -340,10 +356,13 @@ void draw_plots()
 
   gr_y->Draw("AL");
   gr_y->Fit(funcy1, "R");
+  double pary_0=funcy1->GetParameter(0);
+  double pary_1=funcy1->GetParameter(1);
+  double pary_2=funcy1->GetParameter(2);
   outfile<<n_und<<"     Ay="<<funcy1->GetParameter(0)<<endl;
 
   TLine *l2_1 = new TLine(0., -2300, 0, 2300);
-  TLine *l2_2 = new TLine(n_period*32.5, -2300, n_period*32.5, 2300);
+  TLine *l2_2 = new TLine(n_period*l_period, -2300, n_period*l_period, 2300);
   l2_1->SetLineStyle(2);
   l2_2->SetLineStyle(2);
   l2_1->SetLineWidth(2);
@@ -357,10 +376,10 @@ void draw_plots()
   TLine *l3_1 = new TLine(0., -10, 0, 10);
   gr_z->Fit(funcz1, "R");
 
-  TLine *l3_2 = new TLine(n_period*32.5, -10, n_period*32.5, 10);
+  TLine *l3_2 = new TLine(n_period*l_period, -10, n_period*l_period, 10);
 
   if (n_und==93)
-    l3_2 = new TLine(n_period*32.5, -300, n_period*32.5, 300);
+    l3_2 = new TLine(n_period*l_period, -300, n_period*l_period, 300);
   l3_1->SetLineStyle(2);
   l3_2->SetLineStyle(2);
   l3_1->SetLineWidth(2);
@@ -370,14 +389,64 @@ void draw_plots()
 //  leg->Draw();
 
 //  leg->Draw();
-  gr_x->GetXaxis()->SetRangeUser(-50, n_period*32.5+50);
-  gr_y->GetXaxis()->SetRangeUser(-50, n_period*32.5+50);
-  gr_z->GetXaxis()->SetRangeUser(-50, n_period*32.5+50);
-  gr_abs->GetXaxis()->SetRangeUser(-50, n_period*32.5+50);
+  gr_x->GetXaxis()->SetRangeUser(-50, n_period*l_period+50);
+  gr_y->GetXaxis()->SetRangeUser(-50, n_period*l_period+50);
+  gr_z->GetXaxis()->SetRangeUser(-50, n_period*l_period+50);
+  gr_abs->GetXaxis()->SetRangeUser(-50, n_period*l_period+50);
   c->cd(4);
-//  gr_abs->GetXaxis()->SetRangeUser(-50, n_period*32.5+50);
+//  gr_abs->GetXaxis()->SetRangeUser(-50, n_period*l_period+50);
 
-  c->SaveAs(Form("gif/field/field_%d.gif", n_und));
+  c->SaveAs(Form("gif/field/field_%.0f.gif", n_und));
+
+  double diff_gr[50000];
+  double diff_bx_gr[50000];
+  double diff_by_gr[50000];
+  double diff_bxy_gr[50000];
+  double und_length[50000];
+  double total_length=0;
+  double z_start=1.e15;
+  double z_end=1.e15;
+  for (int i=0; i<nz; i++)
+  {
+    und_length[i]=i*dz_field;
+    und_length[i]=z_arr[i];
+    diff_bx_gr[i]=fabs(bx_arr[i]-parx_0*cos(parx_1*z_arr[i]-parx_2));
+    diff_by_gr[i]=fabs(by_arr[i]-pary_0*sin(pary_1*z_arr[i]-pary_2));
+    diff_bxy_gr[i]=diff_bx_gr[i]+diff_by_gr[i];
+    if (diff_bxy_gr[i]<10) total_length+=dz_field;
+    if ( (diff_bxy_gr[i]<10) && (z_start>1.e8) ) z_start=z_arr[i];
+    if (  diff_bxy_gr[i]<10  ) z_end=z_arr[i];
+  }
+
+  TGraph * gr_bx_diff = new TGraph(nz, und_length, diff_bx_gr);
+  TGraph * gr_by_diff = new TGraph(nz, und_length, diff_by_gr);
+  TGraph * gr_bxy_diff = new TGraph(nz, und_length, diff_bxy_gr);
+
+  TCanvas *c2 = new TCanvas("cc2","cc2",100, 0, 1100, 700);
+  c2->Divide(2,2);
+  gr_bx_diff->SetMarkerStyle(7);
+  gr_by_diff->SetMarkerStyle(7);
+  gr_bxy_diff->SetMarkerStyle(7);
+  gr_bx_diff->SetTitle("#left|B_{X, OPERA}-B_{X, FIT}#right|");
+  gr_by_diff->SetTitle("#left|B_{Y, OPERA}-B_{Y, FIT}#right|");
+  gr_bxy_diff->SetTitle("#left|B_{XY, OPERA}-B_{XY, FIT}#right|");
+
+  c2->cd(1);
+  gr_bx_diff->Draw();
+
+  c2->cd(2);
+  gr_by_diff->Draw();
+
+  c2->cd(3);
+  gr_bxy_diff->Draw();
+  TLatex *text_x = new TLatex(l_period*n_period/2, parx_0/2,Form( "#splitline{#splitline{Effective length = %.1f cm}{start = %.1f cm}}{end = %.1f cm}", total_length, z_start, z_end ));
+  text_x->SetTextAlign(22);
+  text_x->SetTextColor(4);
+  text_x->SetTextSize(0.07);
+  text_x->Draw();
+
+  
+
 }
 
 void read_field_data(string fname)
@@ -633,6 +702,5 @@ void do_Minuit()
     }
     delete gMinuit_fit_pars;
     delete rnd_2;
-
 }
 
